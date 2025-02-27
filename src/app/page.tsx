@@ -1,7 +1,9 @@
-import Image from "next/image";
+// app/page.js
+export default async function Home() {
 
-export default function Home() {
   return (
-    <div>ecommerce</div>
+    <div>
+      <div>ecommerce</div>
+    </div>
   );
 }
