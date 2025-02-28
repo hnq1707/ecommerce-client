@@ -8,6 +8,7 @@ import { PreviewSliderProvider } from './context/PreviewSliderContext';
 import CartSidebarModal from '@/components/CartSidebarModal';
 import Navbar from '@/components/Header';
 import { SessionProvider } from 'next-auth/react';
+import Footer from '@/components/Footer';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -33,20 +34,14 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ReduxProvider>
-          <CartModalProvider>
-            <ModalProvider>
-              <PreviewSliderProvider>
+        
                 <SessionProvider>
                   <Navbar/>
                   {children}
+                  <Footer/>
                 </SessionProvider>
 
-                <CartSidebarModal />
-              </PreviewSliderProvider>
-            </ModalProvider>
-          </CartModalProvider>
-        </ReduxProvider>
+                
       </body>
     </html>
   );

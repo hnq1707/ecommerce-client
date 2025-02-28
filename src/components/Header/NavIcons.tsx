@@ -7,18 +7,18 @@ import { Bell, ShoppingCart, User } from 'lucide-react';
 import { logout } from '@/lib/action';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import { useCartModalContext } from '@/app/context/CartSidebarModalContext';
+import { useCartStore } from '@/app/hook/useCartStore';
+import CartModal from '../CartModal';
 
 const NavIcons = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoggedOut, setIsLoggedOut] = useState(false); // Thêm state để theo dõi trạng thái đăng xuất
+  const [isLoggedOut, setIsLoggedOut] = useState(false); 
+    const [isCartOpen, setIsCartOpen] = useState(false);
+
   const { data: session, status } = useSession();
   const router = useRouter();
-  const { openCartModal } = useCartModalContext();
-  const handleOpenCartModal = () => {
-    openCartModal();
-  };
+
   useEffect(() => {
     if (isLoggedOut) {
       setIsProfileOpen(false); // Đóng menu profile khi đăng xuất
@@ -46,6 +46,8 @@ const NavIcons = () => {
       setIsLoading(false);
     }
   };
+    const { cart, counter, getCart } = useCartStore();
+
 
   return (
     <div className="flex items-center gap-4 xl:gap-6 relative">
@@ -78,10 +80,13 @@ const NavIcons = () => {
         </div>
       )}
       <Bell className="cursor-pointer" />
-      <div className="relative cursor-pointer" onClick={handleOpenCartModal}>
+      <div className="relative cursor-pointer" onClick={() => setIsCartOpen((prev) => !prev)}>
         <ShoppingCart />
-        <div className="absolute -top-4 -right-4 w-6 h-6 bg-lama rounded-full text-white text-sm flex items-center justify-center"></div>
+        <div className="absolute -top-4 -right-4 w-6 h-6 bg-lama rounded-full text-white text-sm flex items-center justify-center">
+          {counter}
+        </div>
       </div>
+      {isCartOpen && <CartModal />}
     </div>
   );
 };
