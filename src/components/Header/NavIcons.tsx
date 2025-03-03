@@ -4,8 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Bell, ShoppingCart, User } from 'lucide-react';
-import { logout } from '@/lib/action';
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { useCartStore } from '@/app/hook/useCartStore';
 import CartModal from '../CartModal';
@@ -13,17 +12,21 @@ import CartModal from '../CartModal';
 const NavIcons = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoggedOut, setIsLoggedOut] = useState(false); 
-    const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isLoggedOut, setIsLoggedOut] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const { data: session, status } = useSession();
   const router = useRouter();
 
+  // Đóng profile khi logout
   useEffect(() => {
-    if (isLoggedOut) {
-      setIsProfileOpen(false); // Đóng menu profile khi đăng xuất
+    if (!session) {
+      setIsLoggedOut(true); // ✅ Chỉ đặt `true` khi không có session
+      setIsProfileOpen(false);
+    } else {
+      setIsLoggedOut(false); // ✅ Reset lại khi đăng nhập
     }
-  }, [isLoggedOut]);
+  }, [session]);
 
   const handleProfile = () => {
     if (!session) {
@@ -32,22 +35,29 @@ const NavIcons = () => {
       setIsProfileOpen((prev) => !prev);
     }
   };
-
+  useEffect(() => {
+    if (window.location.pathname === '/profile') {
+      setIsProfileOpen(false);
+    }
+  }, [router]);
   const handleLogout = async () => {
     setIsLoading(true);
 
     try {
-      await logout(); // Gọi hàm logout() đã sửa
-      setIsLoggedOut(true); // Đánh dấu trạng thái đăng xuất
+      await signOut({ redirect: false }); // Logout bằng next-auth
+      setIsLoggedOut(true);
       router.refresh();
+      router.push('/login');
     } catch (error) {
       console.error('Logout failed:', error);
     } finally {
       setIsLoading(false);
     }
   };
-    const { cart, counter, getCart } = useCartStore();
 
+  const { cart, counter, getCart } = useCartStore();
+
+  if (status === 'loading') return null;
 
   return (
     <div className="flex items-center gap-4 xl:gap-6 relative">
@@ -72,10 +82,10 @@ const NavIcons = () => {
       )}
 
       {isProfileOpen && (
-        <div className="absolute p-4 rounded-md top-12 left-0 bg-white text-sm shadow-[0_3px_10px_rgb(0,0,0,0.2)] z-20">
-          <Link href="/profile">Profile</Link>
+        <div className="absolute p-4 rounded-md top-12 left-0 bg-white text-sm shadow-md z-20">
+          <Link href="/profile" onClick={() => setIsProfileOpen((prev) => !prev)}>Profile</Link>
           <div className="mt-2 cursor-pointer" onClick={handleLogout}>
-            {isLoading ? 'Logging out' : 'Logout'}
+            {isLoading ? 'Logging out...' : 'Logout'}
           </div>
         </div>
       )}

@@ -5,13 +5,53 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useState } from 'react';
-import { login } from '@/lib/action';
-
+import GitHubLogin from './github-login';
+import GoogleLogin from './google-login';
+import { useRouter } from 'next/navigation';
 
 
 export function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
-  const [error] = useState('');
+  const router = useRouter();
+  const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+  const [error, setError] = useState('');
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+  });
+  const [loading, setLoading] = useState(false);
+  
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await fetch(`${BASE_URL}/api/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+      console.log('Response data:', data);
+      if (!response.ok) throw new Error(data.message || 'Sign-up failed');
+      sessionStorage.setItem('email', formData.email);
+      console.log('Redirecting to /verify...');
+      router.push('/verify');
+
+    } catch (err) {
+      setError(err.message);
+    
+    } finally {
+    setLoading(false); // Tắt loading khi hoàn thành
+  }
+  };
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
@@ -21,16 +61,12 @@ export function SignupForm({ className, ...props }: React.ComponentPropsWithoutR
           <CardDescription>Sign up with your Github or Google account</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <div className="flex flex-col gap-4 mb-6">
+            <GitHubLogin />
+            <GoogleLogin />
+          </div>
+          <form onSubmit={handleSignUp}>
             <div className="grid gap-6">
-              <div className="flex flex-col gap-4">
-                <Button variant="outline" className="w-full" onClick={() => login("github")}>
-                  Sign up with Github
-                </Button>
-                <Button variant="outline" className="w-full" onClick={() => login("google")}>
-                  Sign up with Google
-                </Button>
-              </div>
               <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
                 <span className="relative z-10 bg-background px-2 text-muted-foreground">
                   Or sign up with email
@@ -38,34 +74,76 @@ export function SignupForm({ className, ...props }: React.ComponentPropsWithoutR
               </div>
               <div className="grid gap-6">
                 <div className="grid gap-2">
-                  <Label htmlFor="name">Name</Label>
-                  <Input id="name" type="text" placeholder="Your name"  />
+                  <Label htmlFor="firstName">First Name</Label>
+                  <Input
+                    id="firstName"
+                    name="firstName"
+                    type="text"
+                    placeholder="First name"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                  />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="phone">Phone Number</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder="1234567890"
-                    />
-                  </div>
-                  {error && <span className="text-red-500 text-sm">{error}</span>}
+                  <Label htmlFor="lastName">Last Name</Label>
+                  <Input
+                    id="lastName"
+                    name="lastName"
+                    type="text"
+                    placeholder="Last name"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" placeholder="m@example.com"  />
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="m@example.com"
+                    value={formData.email}
+                    onChange={handleChange}
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="password">Password</Label>
-                  <Input id="password" type="password"  />
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                  />
                 </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="confirm-password">Confirm Password</Label>
-                  <Input id="confirm-password" type="password"  />
-                </div>
-                <Button type="submit" className="w-full">
-                  Sign Up
+                {error && <span className="text-red-500 text-sm">{error}</span>}
+                <Button
+                  type="submit"
+                  className="w-full flex items-center justify-center"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <svg className="animate-spin h-5 w-5 mr-2 text-white" viewBox="0 0 24 24">
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
+                        ></path>
+                      </svg>
+                      Signing Up...
+                    </>
+                  ) : (
+                    'Sign Up'
+                  )}
                 </Button>
               </div>
               <div className="text-center text-sm">
