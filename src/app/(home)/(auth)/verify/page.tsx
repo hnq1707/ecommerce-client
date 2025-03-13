@@ -9,7 +9,7 @@ import { REGEXP_ONLY_DIGITS } from 'input-otp';
 export default function VerifyEmail() {
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
-   const [email, setEmail] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
   const [error, setError] = useState('');
   const router = useRouter();
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function VerifyEmail() {
     }
 
     try {
-        const code = otp;
+      const code = otp;
       const res = await fetch('http://localhost:8080/api/auth/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -70,36 +70,33 @@ export default function VerifyEmail() {
         </InputOTP>
       </div>
       {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
-      <Button className="w-full" onClick={handleSubmit}>
-type="submit"
-                  className="w-full flex items-center justify-center"
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <>
-                      <svg className="animate-spin h-5 w-5 mr-2 text-white" viewBox="0 0 24 24">
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
-                        ></path>
-                      </svg>
-                      Verifing ...
-                    </>
-                  ) : (
-                    'Verify Now'
-                  )}      </Button>
+      <Button className="w-full" onClick={handleSubmit} type="submit" disabled={loading}>
+        {loading ? (
+          <>
+            <svg className="animate-spin h-5 w-5 mr-2 text-white" viewBox="0 0 24 24">
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
+              ></path>
+            </svg>
+            Verifing ...
+          </>
+        ) : (
+          'Verify Now'
+        )}{' '}
+      </Button>
       <div className="flex justify-between text-sm mt-4">
-        <button className="text-blue-500">Resend code</button>
-        <button className="text-blue-500">Change email</button>
+        <Button >Resend code</Button>
+        <Button>Go back</Button>
       </div>
     </div>
   );

@@ -2,23 +2,30 @@ import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { login2 } from '@/lib/action';
+import { useState } from 'react';
 
 export default function CredentialLogin() {
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-    console.log(email, password);
-    const result = await login2('credentials', {
-      redirect: false,
-      email,
-      password,
-    });
-
-    if (result.error) {
-      alert(result.error);
-    } else {
-      window.location.href = '/'; // Chuyển hướng sau khi đăng nhập thành công
+    setLoading(true);
+    try {
+      const result = await login2('credentials', {
+        redirect: false,
+        email,
+        password,
+      });
+      if (result.error) {
+        throw new Error(result.error);
+      }
+      window.location.href = '/';
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -43,8 +50,33 @@ export default function CredentialLogin() {
             </div>
             <Input id="password" type="password" />
           </div>
-          <Button type="submit" className="w-full">
-            Login
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <svg className="animate-spin h-5 w-5 mr-2 text-white" viewBox="0 0 24 24">
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
+                  ></path>
+                </svg>
+                Logging In...
+              </>
+            ) : (
+              'Log In'
+            )}
           </Button>
         </div>
         <div className="text-center text-sm">

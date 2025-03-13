@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use server';
-import { signIn, signOut } from '@/auth';
+import { auth, signIn, signOut } from '@/auth';
 export const login2 = async (
   provider: string,
   credentials?: { email: string; password: string },
@@ -23,30 +23,16 @@ export const logout = async () => {
 export const login = async (provider: string) => {
   await signIn(provider, { redirectTo: '/' });
 };
-export const updateUser = async (formData: FormData) => {
-  const id = formData.get('id') as string;
-  const username = formData.get('username') as string;
-  const firstName = formData.get('firstName') as string;
-  const lastName = formData.get('lastName') as string;
-  const email = formData.get('email') as string;
-  const phoneNumber = formData.get('phoneNumber') as string;
-
-  const payload = {
-    firstName,
-    lastName,
-    phoneNumber,
-    email,
-    username,
-  };
-
+export const updateUser = async (id: any,updateData: any) => {
+  const session = await auth();
   try {
-    const response = await fetch(`http://localhost:8080/users/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
+        Authorization: `Bearer ${session?.accessToken}`,
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(updateData),
     });
 
     if (!response.ok) {

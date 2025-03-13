@@ -6,9 +6,8 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// Thêm interceptor để tự động thêm token từ NextAuth
 api.interceptors.request.use(async (config) => {
-  const session = await getSession(); // Lấy session hiện tại
+  const session = await getSession();
   if (session?.accessToken) {
     config.headers.Authorization = `Bearer ${session.accessToken}`;
   }

@@ -24,7 +24,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         const json = await res.json();
         const user = json.result;
-
         if (res.ok && user)
           return {
             id: user.id,
@@ -36,16 +35,55 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
+    async signIn({ user, account }) {
+      if (account?.provider === 'credentials') {
+        return true;
+      }
+
+      try {
+        const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+        const response = await fetch(
+          `${BASE_URL}/api/auth/check-user`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: user.email,
+              name: user.name,
+              image: user.image,
+              provider: account?.provider,
+            }),
+          },
+        );
+        const data = await response.json();
+        const dbUser = data.result;
+        if(dbUser){
+          user.id = dbUser.id;
+        }
+        if (!response.ok) {
+          throw new Error('Lỗi khi kiểm tra/tạo tài khoản');
+        }
+
+        return true; // Cho phép đăng nhập
+      } catch (error) {
+        console.error('Lỗi xác thực người dùng:', error);
+        return false;
+      }
+    },
+
     async jwt({ token, user, account }) {
       if (user) {
         token.accessToken = user.accessToken;
-        token.provider = account?.provider || 'credentials'; // Lưu provider
+        token.provider = account?.provider || 'credentials';
+        token.id = user.id;
       }
       return token;
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken;
       session.user.provider = token.provider;
+      session.user.id = token.id;
       return session;
     },
   },
@@ -70,5 +108,3 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     maxAge: 3600,
   },
 });
-
-

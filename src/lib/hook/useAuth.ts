@@ -1,4 +1,5 @@
-import api from '../../lib/utils/api';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import api from '../utils/api';
 import { useState } from 'react';
 
 export const useAuthApi = () => {
@@ -26,8 +27,8 @@ export const useAuthApi = () => {
     verify: (data: any) => callApi('/api/auth/verify', data),
     getToken: (data: any) => callApi('/api/auth/token', data),
     register: (data: any) => callApi('/api/auth/register', data),
-    refresh: (data:any) => callApi('/api/auth/refresh',data),
-    logout: (data:any) => callApi('/api/auth/logout'),
+    refresh: (data: any) => callApi('/api/auth/refresh', data),
+    logout: (data: any) => callApi('/api/auth/logout'),
     introspect: (data: any) => callApi('/api/auth/introspect', data),
   };
 };

@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import { Bell, ShoppingCart, User } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
-import { useCartStore } from '@/app/hook/useCartStore';
+import { useCartStore } from '@/lib/redux/features/cart/useCartStore';
 import CartModal from '../CartModal';
 
 const NavIcons = () => {
@@ -55,7 +55,7 @@ const NavIcons = () => {
     }
   };
 
-  const { cart, counter, getCart } = useCartStore();
+  const { totalQuantity } = useCartStore();
 
   if (status === 'loading') return null;
 
@@ -65,6 +65,7 @@ const NavIcons = () => {
         <div className="relative cursor-pointer" onClick={() => setIsProfileOpen((prev) => !prev)}>
           {session.user?.image ? (
             <Image
+            className='rounded-full'
               key={session?.user?.image}
               src={session?.user?.image}
               width={30}
@@ -93,7 +94,7 @@ const NavIcons = () => {
       <div className="relative cursor-pointer" onClick={() => setIsCartOpen((prev) => !prev)}>
         <ShoppingCart />
         <div className="absolute -top-4 -right-4 w-6 h-6 bg-lama rounded-full text-white text-sm flex items-center justify-center">
-          {counter}
+          {totalQuantity}
         </div>
       </div>
       {isCartOpen && <CartModal />}
