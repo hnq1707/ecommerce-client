@@ -18,7 +18,6 @@ const NavIcons = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  // Đóng profile khi logout
   useEffect(() => {
     if (!session) {
       setIsLoggedOut(true); // ✅ Chỉ đặt `true` khi không có session

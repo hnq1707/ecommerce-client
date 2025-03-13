@@ -14,7 +14,7 @@ const ProfilePage = () => {
   const { data: session } = useSession();
   const [isEditing, setIsEditing] = useState(false);
   const [user, setUser] = useState(null);
-  const { getMyInfo, loading, error } = useUserApi();
+  const { getMyInfo } = useUserApi();
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {

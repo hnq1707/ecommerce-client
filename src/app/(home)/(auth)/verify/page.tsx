@@ -43,8 +43,8 @@ export default function VerifyEmail() {
       } else {
         setError('Mã xác minh không đúng. Vui lòng thử lại.');
       }
-    } catch (err) {
-      setError('Có lỗi xảy ra, vui lòng thử lại.');
+    } catch (err ) {
+      setError(`Có lỗi xảy ra, vui lòng thử lại. ${err}`);
     }
   };
 

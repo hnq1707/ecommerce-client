@@ -3,6 +3,7 @@ import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { login2 } from '@/lib/action';
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function CredentialLogin() {
   const [loading, setLoading] = useState(false);
@@ -14,7 +15,6 @@ export default function CredentialLogin() {
     setLoading(true);
     try {
       const result = await login2('credentials', {
-        redirect: false,
         email,
         password,
       });
@@ -81,9 +81,9 @@ export default function CredentialLogin() {
         </div>
         <div className="text-center text-sm">
           Don&apos;t have an account?{' '}
-          <a href="/signup" className="underline underline-offset-4">
+          <Link href="/signup" className="underline underline-offset-4">
             Sign up
-          </a>
+          </Link>
         </div>
       </div>
     </form>

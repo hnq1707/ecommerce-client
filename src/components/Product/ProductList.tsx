@@ -6,7 +6,7 @@ import useProducts from '@/lib/redux/features/product/useProductStore';
 import { useCartStore } from '@/lib/redux/features/cart/useCartStore';
 import { ShoppingBag, Star } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { CartItem } from '@/lib/type/CartItem';
 import Pagination from './Pagination';
 
@@ -20,7 +20,7 @@ interface ProductListProps {
 const ProductList: React.FC<ProductListProps> = ({ categoryId, typeId, sort ,page}) => {
   const router = useRouter();
   const { products, getProducts, loading, error, totalPages } = useProducts();
-  // const [currentPage, setCurrentPage] = useState(page); // ✅ Pagination sẽ thay đổi giá trị này
+  // const [currentPage, setCurrentPage] = useState(page); 
 
   useEffect(() => {
     getProducts(categoryId, typeId, sort, page - 1);

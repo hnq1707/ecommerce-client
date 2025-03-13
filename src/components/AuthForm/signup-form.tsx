@@ -8,6 +8,7 @@ import { useState } from 'react';
 import GitHubLogin from './github-login';
 import GoogleLogin from './google-login';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 
 export function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
@@ -148,9 +149,9 @@ export function SignupForm({ className, ...props }: React.ComponentPropsWithoutR
               </div>
               <div className="text-center text-sm">
                 Already have an account?{' '}
-                <a href="/login" className="underline underline-offset-4">
+                <Link href="/login" className="underline underline-offset-4">
                   Log in
-                </a>
+                </Link>
               </div>
             </div>
           </form>
