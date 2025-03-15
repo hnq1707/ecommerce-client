@@ -20,17 +20,16 @@ const Add = ({
   const [quantity, setQuantity] = useState(1);
   const { addItem } = useCartStore();
 
-
   const handleQuantity = (type: 'i' | 'd') => {
     setQuantity((prev) => {
       if (type === 'd' && prev > 1) return prev - 1;
-      if (type === 'i' && prev < stockQuantity) return prev + 1;
+      if (type === 'i' && prev < (stockQuantity ?? 0)) return prev + 1;
       return prev;
     });
   };
 
   const handleAddToCart = () => {
-    if (stockQuantity < 1) return;
+    if ((stockQuantity ?? 0) < 1) return;
 
     const cartItem: CartItem = {
       id: product.id,
@@ -43,7 +42,7 @@ const Add = ({
       categoryName: product.categoryName,
       categoryTypeId: product.categoryTypeId,
       categoryTypeName: product.categoryTypeName,
-      productVariants: variant,
+      productVariants: variant ?? ({} as ProductVariant),
       resources: product.resources,
       description: product.description,
       newArrival: product.newArrival,
@@ -70,7 +69,7 @@ const Add = ({
           <button
             className="cursor-pointer text-xl disabled:cursor-not-allowed disabled:opacity-20"
             onClick={() => handleQuantity('i')}
-            disabled={quantity >= stockQuantity}
+            disabled={quantity >= (stockQuantity ?? 0)}
           >
             +
           </button>
@@ -79,7 +78,7 @@ const Add = ({
         {/* Nút thêm vào giỏ hàng */}
         <Button
           onClick={handleAddToCart}
-          disabled={stockQuantity < 1}
+          disabled={(stockQuantity ?? 0) < 1}
           className="w-36 text-sm rounded-3xl py-2 px-4 hover:bg-white hover:text-black disabled:cursor-not-allowed disabled:bg-gray-300 disabled:ring-0 disabled:text-gray-500"
         >
           Add to Cart

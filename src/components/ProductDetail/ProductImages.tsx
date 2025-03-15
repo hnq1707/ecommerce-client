@@ -1,6 +1,6 @@
 'use client';
+import { Resource } from '@/lib/type/Resource';
 import Image from 'next/image';
-import { Resource } from '@/lib/redux/features/product/productSlice';
 
 const ProductImages = ({ items = [] }: { items?: Resource[] }) => {
   // Kiểm tra nếu items có dữ liệu và lấy ảnh chính

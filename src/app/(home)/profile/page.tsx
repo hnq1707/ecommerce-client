@@ -1,48 +1,31 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { updateUser } from '@/lib/action';
 import UpdateButton from '@/components/UpdateButton';
 import { Button } from '@/components/ui/button';
-import { useUserApi } from '../../../lib/hook/useUser';
 import { useRouter } from 'next/navigation';
-
+import { useUsers } from '@/lib/redux/features/user/useUser';
 const ProfilePage = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const [isEditing, setIsEditing] = useState(false);
-  const [user, setUser] = useState(null);
-  const { getMyInfo } = useUserApi();
   const [uploading, setUploading] = useState(false);
+  const { user, loading, error, fetchUser, updateUserData, setUserState } = useUsers();
 
   useEffect(() => {
-    if (!session) return;
-
-    if (session?.user?.provider === 'credentials' && !user) {
-      const fetchUserInfo = async () => {
-        try {
-          const data = await getMyInfo();
-          if (data?.result) {
-            setUser(data.result);
-          } else {
-            console.error('🚨 Không có `result` trong API!');
-          }
-        } catch (error) {
-          console.error('❌ Lỗi khi fetch API:', error);
-        }
-      };
-      fetchUserInfo();
-    } else if (!user) {
-      setUser(session?.user);
+    if (session?.user?.id) {
+      fetchUser(session.user.id);
     }
-  }, [session]);
+  }, [session?.user?.id]);
 
-  if (!session || !user) {
-    return <p>Loading...</p>;
-  }
-  const handleUploadAvatar = async (event) => {
+  if (loading) return <p>Loading...</p>;
+if (error) return <p> Có lỗi xảy ra</p>;
+  if (!user) return <p>No user data found.</p>;
+
+  const handleUploadAvatar = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -64,15 +47,30 @@ const ProfilePage = () => {
       const imageUrl = data.filePath;
 
       if (imageUrl) {
-        setUser((prevUser) => ({
-          ...prevUser,
-          image: imageUrl,
-        }));
+        setUserState({
+          ...user,
+          imageUrl: imageUrl,
+        });
       }
     } catch (error) {
       console.error('Upload failed:', error);
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleUpdateUser = async () => {
+    if (!user) return;
+    try {
+      if (session?.user?.id) {
+        updateUserData(session.user.id, user);
+      } else {
+        console.error('Session or user ID is missing');
+      }
+      alert('✅ Cập nhật thành công!');
+      router.refresh();
+    } catch (error) {
+      console.error('❌ Lỗi khi cập nhật:', error);
     }
   };
 
@@ -87,29 +85,28 @@ const ProfilePage = () => {
           )
           .join(' | ')
       : '';
-  const id = session.user.id;
 
-  const handleUpdateUser = async () => {
-    if (!user) {
-      console.error('❌ Không có dữ liệu user!');
-      return;
-    }
+  // const handleUpdateUser = async () => {
+  //   if (!user) {
+  //     console.error('❌ Không có dữ liệu user!');
+  //     return;
+  //   }
 
-    const userData = {
-      firstName: user?.firstName || '',
-      lastName: user?.lastName || '',
-      phoneNumber: user?.phoneNumber || '',
-      imageUrl: user?.image || '',
-    };
+  //   // // const userData = {
+  //   // //   firstName: user?.firstName || '',
+  //   // //   lastName: user?.lastName || '',
+  //   // //   phoneNumber: user?.phoneNumber || '',
+  //   // //   imageUrl: user?.image || '',
+  //   // // };
 
-    try {
-      await updateUser(id, userData);
-      alert('✅ Cập nhật thành công!');
-      router.refresh();
-    } catch (error) {
-      console.error('❌ Lỗi khi cập nhật:', error);
-    }
-  };
+  //   // try {
+  //   //   await updateUser(id, userData);
+  //   //   alert('✅ Cập nhật thành công!');
+  //   //   router.refresh();
+  //   // } catch (error) {
+  //   //   console.error('❌ Lỗi khi cập nhật:', error);
+  //   }
+  // };
 
   return (
     <div className="bg-gray-100 min-h-screen p-6">
@@ -119,7 +116,7 @@ const ProfilePage = () => {
             <div className="flex flex-col md:flex-row gap-6">
               <div className="bg-white shadow-md rounded-lg p-6 w-full md:w-1/3 text-center relative">
                 <Image
-                  src={user?.imageUrl || user?.image || '/default-avatar.png'}
+                  src={user?.imageUrl || '/default-avatar.png'}
                   alt="User Avatar"
                   width={120}
                   height={120}
@@ -172,7 +169,7 @@ const ProfilePage = () => {
                         className="w-full border rounded-md p-2"
                         value={user?.firstName || ''}
                         disabled={!isEditing}
-                        onChange={(e) => setUser({ ...user, firstName: e.target.value })}
+                        onChange={(e) => setUserState({ ...user, firstName: e.target.value })}
                       />
                     </div>
                     <div>
@@ -183,7 +180,7 @@ const ProfilePage = () => {
                         className="w-full border rounded-md p-2"
                         value={user?.lastName || ''}
                         disabled={!isEditing}
-                        onChange={(e) => setUser({ ...user, lastName: e.target.value })}
+                        onChange={(e) => setUserState({ ...user, lastName: e.target.value })}
                       />
                     </div>
                     <div>
@@ -194,7 +191,7 @@ const ProfilePage = () => {
                         className="w-full border rounded-md p-2"
                         value={user?.email || ''}
                         disabled
-                        onChange={(e) => setUser({ ...user, email: e.target.value })}
+                        onChange={(e) => setUserState({ ...user, email: e.target.value })}
                       />
                     </div>
                     <div>
@@ -205,7 +202,7 @@ const ProfilePage = () => {
                         className="w-full border rounded-md p-2"
                         value={user?.phoneNumber || ''}
                         disabled={!isEditing}
-                        onChange={(e) => setUser({ ...user, phoneNumber: e.target.value })}
+                        onChange={(e) => setUserState({ ...user, phoneNumber: e.target.value })}
                       />
                     </div>
                     <div className="col-span-2">
@@ -217,7 +214,20 @@ const ProfilePage = () => {
                         value={combinedAddress || ''}
                         disabled={!isEditing}
                         onChange={(e) =>
-                          setUser({ ...user, addressList: [{ street: e.target.value }] })
+                          setUserState({
+                            ...user,
+                            addressList: [
+                              {
+                                id: user.addressList[0]?.id || '',
+                                name: user.addressList[0]?.name || '',
+                                street: e.target.value,
+                                city: user.addressList[0]?.city || '',
+                                state: user.addressList[0]?.state || '',
+                                zipCode: user.addressList[0]?.zipCode || '',
+                                phoneNumber: user.addressList[0]?.phoneNumber || '',
+                              },
+                            ],
+                          })
                         }
                       />
                     </div>

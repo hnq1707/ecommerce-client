@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use server';
 import { auth, signIn, signOut } from '@/auth';
+
 export const login2 = async (
   provider: string,
   credentials?: { email: string; password: string },
@@ -16,7 +17,7 @@ export const login2 = async (
     return { error: error.message || 'An error occurred' };
   }
 };
-export const logout = async () => {
+export const handleLogout = async () => {
   await signOut({redirectTo: '/login'});
   
 };
@@ -30,7 +31,7 @@ export const updateUser = async (id: any,updateData: any) => {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${session?.accessToken}`,
+        Authorization: `Bearer ${session?.user?.accessToken}`,
       },
       body: JSON.stringify(updateData),
     });

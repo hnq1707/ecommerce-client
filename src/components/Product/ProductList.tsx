@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { CartItem } from '@/lib/type/CartItem';
 import Pagination from './Pagination';
+import { Product } from '@/lib/type/Product';
 
 interface ProductListProps {
   categoryId?: string;
@@ -23,14 +24,14 @@ const ProductList: React.FC<ProductListProps> = ({ categoryId, typeId, sort ,pag
   // const [currentPage, setCurrentPage] = useState(page); 
 
   useEffect(() => {
-    getProducts(categoryId, typeId, sort, page - 1);
+    getProducts(categoryId, typeId, sort, (page ?? 1) - 1);
   }, [categoryId, typeId, sort, page]);
   const { addItem } = useCartStore();
-  const handleAddToCart = (product) => {
+  const handleAddToCart = (product : Product) => {
     const cartItem: CartItem = {
       ...product,
       productVariants: product.productVariants[0],
-      resources: product.resources[0],
+      resources: [product.resources[0]],
       quantity: 1,
     };
     addItem(cartItem, 1);

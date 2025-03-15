@@ -1,9 +1,9 @@
 'use client';
 
-import { CartItem } from '@/lib/redux/features/cart/cartSlice';
 import {useCartStore} from '@/lib/redux/features/cart/useCartStore'
 import Image from 'next/image';
 import { Button } from '../ui/button';
+import { CartItem } from '@/lib/type/CartItem';
 
 const CartModal = () => {
 const { cartItems, totalQuantity, totalPrice, removeItem, clear } = useCartStore();  

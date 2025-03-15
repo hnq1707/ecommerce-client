@@ -8,10 +8,11 @@ import Link from 'next/link';
 export default function CredentialLogin() {
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const email = e.target.email.value;
-    const password = e.target.password.value;
+    const form = e.target as HTMLFormElement;
+    const email = (form.elements.namedItem('email') as HTMLInputElement).value;
+    const password = (form.elements.namedItem('password') as HTMLInputElement).value;
     setLoading(true);
     try {
       const result = await login2('credentials', {
@@ -23,7 +24,11 @@ export default function CredentialLogin() {
       }
       window.location.href = '/';
     } catch (err) {
-      alert(err.message);
+      if (err instanceof Error) {
+        alert(`Failed to log in: ${err.message}`);
+      } else {
+        alert('Failed to log in due to an unknown error.');
+      }
     } finally {
       setLoading(false);
     }

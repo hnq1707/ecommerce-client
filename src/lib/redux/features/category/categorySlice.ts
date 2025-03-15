@@ -4,25 +4,25 @@ import { Category } from '@/lib/type/Category';
 
 // Thunks
 export const fetchCategories = createAsyncThunk('categories/fetchAll', async () => {
-  const response = await api.get<Category[]>('/api/category');
-  return response.data.result;
+  const response = await api.get<{ code: number; result: Category[] }>('/api/category');
+  return response.data;
 });
 
 export const fetchCategoryById = createAsyncThunk('categories/fetchById', async (id: string) => {
   const response = await api.get<Category>(`/api/category/${id}`);
-  return response.data.result;
+  return response.data;
 });
 
 export const createCategory = createAsyncThunk('categories/create', async (category: Category) => {
   const response = await api.post<Category>('/api/category', category);
-  return response.data.result;
+  return response.data;
 });
 
 export const updateCategory = createAsyncThunk(
   'categories/update',
   async ({ id, category }: { id: string; category: Category }) => {
     const response = await api.put<Category>(`/api/category/${id}`, category);
-    return response.data.result;
+    return response.data;
   },
 );
 
@@ -48,8 +48,9 @@ const categorySlice = createSlice({
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.loading = false;
-        state.categories = action.payload;
+        state.categories = action.payload.result ?? [];
       })
+
       .addCase(fetchCategories.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Failed to fetch categories';

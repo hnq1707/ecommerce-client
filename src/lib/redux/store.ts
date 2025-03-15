@@ -2,6 +2,8 @@ import { configureStore } from '@reduxjs/toolkit';
 import cartReducer from './features/cart/cartSlice';
 import productReducer from './features/product/productSlice';
 import categoryReducer from './features/category/categorySlice';
+import authReducer from './features/auth/authSlice';
+import userReducer from './features/user/userSlice';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // Sử dụng localStorage
 import { combineReducers } from 'redux';
@@ -18,6 +20,8 @@ const rootReducer = combineReducers({
   cart: cartReducer,
   product: productReducer,
   category: categoryReducer,
+  auth: authReducer,
+  user: userReducer,
 });
 
 // Tạo persisted reducer

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -5,13 +6,27 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { REGEXP_ONLY_DIGITS } from 'input-otp';
+import { useAuth } from '@/lib/redux/features/auth/useAuth';
+import { VerifyRequest } from '@/lib/redux/features/auth/authTypes';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/lib/redux/store';
 
 export default function VerifyEmail() {
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState<string | null>(null);
   const [error, setError] = useState('');
+  const [resendDisabled, setResendDisabled] = useState(false);
   const router = useRouter();
+  const { verify, renewVerification } = useAuth();
+
+  const isVerified = useSelector((state: RootState) => state.auth.verify);
+
+  useEffect(() => {
+    if (isVerified) {
+      router.push('/login');
+    }
+  }, [isVerified, router]);
   useEffect(() => {
     // Lấy email từ sessionStorage
     const storedEmail = sessionStorage.getItem('email');
@@ -23,28 +38,39 @@ export default function VerifyEmail() {
   }, [router]);
 
   const handleSubmit = async () => {
-    setLoading(true);
     if (otp.length < 6) {
       setError('Vui lòng nhập đầy đủ mã xác minh.');
       return;
     }
 
-    try {
-      const code = otp;
-      const res = await fetch('http://localhost:8080/api/auth/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, code }),
-      });
-      console.log('Response:', res);
+    setLoading(true);
+    setError('');
 
-      if (res.ok) {
-        router.push('/login');
-      } else {
-        setError('Mã xác minh không đúng. Vui lòng thử lại.');
-      }
-    } catch (err ) {
-      setError(`Có lỗi xảy ra, vui lòng thử lại. ${err}`);
+    try {
+      const data: VerifyRequest = { email: email as string, code: otp };
+      await verify(data);
+    } catch (err) {
+      setError('Mã xác minh không đúng hoặc có lỗi xảy ra.');
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    if (!email) return;
+
+    setResendDisabled(true);
+    setError('');
+
+    try {
+      await renewVerification({ email });
+      alert(`Mã xác minh đã được gửi lại.Vui lòng kiểm tra ${email} để nhận mã xác minh mới.`);
+    } catch (err: any) {
+      setError('Không thể gửi lại mã, vui lòng thử sau.');
+      console.log(err);
+    } finally {
+      setResendDisabled(false);
     }
   };
 
@@ -54,13 +80,14 @@ export default function VerifyEmail() {
       <p className="text-sm text-gray-600 my-4">
         A verification code has been sent to <span className="font-semibold">{email}</span>
       </p>
+
       <div className="flex justify-center gap-2 mb-4">
         <InputOTP
           maxLength={6}
           pattern={REGEXP_ONLY_DIGITS}
           value={otp}
           onChange={setOtp}
-          className="flex justify-center gap-2 mb-4"
+          className="flex justify-center gap-2"
         >
           <InputOTPGroup>
             {[...Array(6)].map((_, index) => (
@@ -69,7 +96,9 @@ export default function VerifyEmail() {
           </InputOTPGroup>
         </InputOTP>
       </div>
+
       {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+
       <Button className="w-full" onClick={handleSubmit} type="submit" disabled={loading}>
         {loading ? (
           <>
@@ -88,15 +117,18 @@ export default function VerifyEmail() {
                 d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
               ></path>
             </svg>
-            Verifing ...
+            Verifying ...
           </>
         ) : (
           'Verify Now'
-        )}{' '}
+        )}
       </Button>
+
       <div className="flex justify-between text-sm mt-4">
-        <Button >Resend code</Button>
-        <Button>Go back</Button>
+        <Button onClick={handleResend} disabled={resendDisabled}>
+          {resendDisabled ? 'Please wait...' : 'Resend code'}
+        </Button>
+        <Button onClick={() => router.back()}>Go back</Button>
       </div>
     </div>
   );

@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import NextAuth from 'next-auth';
+import NextAuth, { Session } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import GitHub from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
 import { jwtVerify, SignJWT } from 'jose';
+
+
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -25,6 +28,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         const json = await res.json();
         const user = json.result;
+        console.log(user);
         if (res.ok && user)
           return {
             id: user.id,
@@ -36,17 +40,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    async signIn({ user, account }) {
-      if (account?.provider === 'credentials') {
-        return true;
-      }
-
-      try {
-        const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-        const response = await fetch(
-          `${BASE_URL}/api/auth/check-user`,
-          {
+    async signIn({ user, account }): Promise<boolean> {
+      if (account?.provider !== 'credentials') {
+        try {
+          const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+          const response = await fetch(`${BASE_URL}/api/auth/check-user`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -55,52 +53,79 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               image: user.image,
               provider: account?.provider,
             }),
-          },
-        );
-        const data = await response.json();
-        const dbUser = data.result;
-        if(dbUser){
-          user.id = dbUser.id;
-        }
-        if (!response.ok) {
-          throw new Error('Lỗi khi kiểm tra/tạo tài khoản');
-        }
+          });
 
-        return true; // Cho phép đăng nhập
-      } catch (error) {
-        console.error('Lỗi xác thực người dùng:', error);
-        return false;
+          const data = await response.json();
+          if (data.code === 0 && data.result) {
+            user.id = data.result.id;
+            user.accessToken = data.result.accessToken; // Lưu accessToken vào user
+          } else {
+            const createResponse = await fetch(`${BASE_URL}/api/auth/check-user`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email: user.email,
+                name: user.name,
+                image: user.image,
+                provider: account?.provider,
+              }),
+            });
+            const createData = await createResponse.json();
+
+            console.log('createData:', createData);
+            user.id = createData.result.id;
+            user.accessToken = createData.result.accessToken;
+          }
+        } catch (error) {
+          console.error('Lỗi khi kiểm tra/tạo người dùng:', error);
+          return false;
+        }
       }
+      return true;
     },
-
-    async jwt({ token, user, account }) {
+    async jwt({ token, user }) {
       if (user) {
-        token.accessToken = user.accessToken;
-        token.provider = account?.provider || 'credentials';
         token.id = user.id;
+        token.email = user.email;
+        token.accessToken = user.accessToken;
       }
+
       return token;
     },
-    async session({ session, token }) {
+    async session({
+      session,
+      token,
+    }: {
+      session: Session & { accessToken?: string };
+      token: any;
+    }): Promise<Session> {
+      session.user = {
+        id: token.id,
+        email: token.email,
+      };
       session.accessToken = token.accessToken;
-      session.user.provider = token.provider;
-      session.user.id = token.id;
       return session;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
   jwt: {
     encode: async ({ secret, token }) => {
-      return new SignJWT(token)
+      return new SignJWT(token as any)
         .setProtectedHeader({ alg: 'HS512' })
         .setIssuedAt()
         .setExpirationTime('1h')
-        .sign(new TextEncoder().encode(secret));
+        .sign(new TextEncoder().encode(Array.isArray(secret) ? secret[0] : secret));
     },
     decode: async ({ secret, token }) => {
-      const { payload } = await jwtVerify(token, new TextEncoder().encode(secret), {
+      if (!token) {
+        throw new Error('Token is required for decoding');
+      }
+
+      const secretKey = Array.isArray(secret) ? secret[0] : secret || '';
+      const { payload } = await jwtVerify(token, new TextEncoder().encode(secretKey), {
         algorithms: ['HS512'],
       });
+
       return payload;
     },
   },

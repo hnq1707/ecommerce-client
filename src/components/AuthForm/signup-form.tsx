@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -25,12 +26,12 @@ export function SignupForm({ className, ...props }: React.ComponentPropsWithoutR
   const [loading, setLoading] = useState(false);
   
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSignUp = async (e) => {
+  const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -47,7 +48,7 @@ export function SignupForm({ className, ...props }: React.ComponentPropsWithoutR
       router.push('/verify');
 
     } catch (err) {
-      setError(err.message);
+      setError((err as any).message);
     
     } finally {
     setLoading(false); // Tắt loading khi hoàn thành

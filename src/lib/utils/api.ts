@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getSession } from 'next-auth/react'; // 🔥 Lấy session từ NextAuth
+import { getSession } from 'next-auth/react';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -8,8 +8,8 @@ const api = axios.create({
 
 api.interceptors.request.use(async (config) => {
   const session = await getSession();
-  if (session?.accessToken) {
-    config.headers.Authorization = `Bearer ${session.accessToken}`;
+  if (session?.user?.accessToken) {
+    config.headers.Authorization = `Bearer ${session.user.accessToken}`;
   }
   return config;
 });
