@@ -1,4 +1,4 @@
-import { login } from '@/lib/action';
+import { login } from '@/lib/actions/action';
 import React from 'react';
 import { Button } from '../ui/button';
 

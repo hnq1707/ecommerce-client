@@ -41,7 +41,6 @@ export function SignupForm({ className, ...props }: React.ComponentPropsWithoutR
         body: JSON.stringify(formData),
       });
       const data = await response.json();
-      console.log('Response data:', data);
       if (!response.ok) throw new Error(data.message || 'Sign-up failed');
       sessionStorage.setItem('email', formData.email);
       console.log('Redirecting to /verify...');

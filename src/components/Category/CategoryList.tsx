@@ -15,7 +15,6 @@ const CategoryList = () => {
 
   if (loading) return <p>Loading categories...</p>;
   if (error) return <p>Error: {error}</p>;
-  console.log(categories);
 
   return (
     <div className="px-4 overflow-x-scroll scrollbar-hide">

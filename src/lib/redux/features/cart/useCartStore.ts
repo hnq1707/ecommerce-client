@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart, clearCart, removeFromCart } from './cartSlice';
+import { addToCart, clearCart, removeFromCart, updateQuantity } from './cartSlice';
 import { RootState } from '../../store';
 import { CartItem } from '@/lib/type/CartItem';
 
@@ -12,7 +12,12 @@ export const useCartStore = () => {
   };
 
   const removeItem = (id: string) => dispatch(removeFromCart({ id }));
+
+  const changeQuantity = (id: string, quantity: number) => {
+    dispatch(updateQuantity({ id, quantity }));
+  };
+
   const clear = () => dispatch(clearCart());
 
-  return { ...cart, addItem, removeItem, clear };
+  return { ...cart, addItem, removeItem, changeQuantity, clear };
 };

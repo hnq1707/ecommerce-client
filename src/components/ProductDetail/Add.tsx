@@ -4,21 +4,22 @@ import { useState } from 'react';
 import { CartItem } from '@/lib/type/CartItem';
 import { ProductVariant } from '@/lib/type/ProductVariant';
 import { useCartStore } from '@/lib/redux/features/cart/useCartStore';
-
 import { Button } from '../ui/button';
 import { Product } from '@/lib/type/Product';
+import { Minus, Plus, ShoppingCart, Check } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
-const Add = ({
-  product,
-  variant,
-  stockQuantity,
-}: {
+interface AddProps {
   product: Product;
   variant: ProductVariant | null;
   stockQuantity: number | undefined;
-}) => {
+}
+
+const Add = ({ product, variant, stockQuantity }: AddProps) => {
   const [quantity, setQuantity] = useState(1);
+  const [isAdding, setIsAdding] = useState(false);
   const { addItem } = useCartStore();
+  const { toast } = useToast();
 
   const handleQuantity = (type: 'i' | 'd') => {
     setQuantity((prev) => {
@@ -29,8 +30,11 @@ const Add = ({
   };
 
   const handleAddToCart = () => {
-    if ((stockQuantity ?? 0) < 1) return;
+    if ((stockQuantity ?? 0) < 1 || !variant) return;
 
+    setIsAdding(true);
+
+    // Create cart item
     const cartItem: CartItem = {
       id: product.id,
       name: product.name,
@@ -42,48 +46,99 @@ const Add = ({
       categoryName: product.categoryName,
       categoryTypeId: product.categoryTypeId,
       categoryTypeName: product.categoryTypeName,
-      productVariants: variant ?? ({} as ProductVariant),
+      productVariants: variant,
       resources: product.resources,
       description: product.description,
       newArrival: product.newArrival,
       rating: product.rating,
       quantity,
     };
-    addItem(cartItem, quantity);
+
+    // Add to cart with animation
+    setTimeout(() => {
+      addItem(cartItem, quantity);
+
+      // Show success toast
+      toast({
+        title: 'Added to cart',
+        description: `${quantity} × ${product.name} (${variant.color}, ${variant.size})`,
+        duration: 3000,
+      });
+
+      setIsAdding(false);
+    }, 500);
   };
+
+  const isOutOfStock = (stockQuantity ?? 0) < 1;
+  const isVariantSelected = !!variant;
 
   return (
     <div className="flex flex-col gap-4">
-      <h4 className="font-medium">Choose a Quantity</h4>
-      <div className="flex justify-between items-center">
-        {/* Bộ chọn số lượng */}
-        <div className="bg-gray-100 py-2 px-4 rounded-3xl flex items-center justify-between w-32">
+      <div className="flex items-center justify-between">
+        <h4 className="font-medium">Choose a Quantity</h4>
+        {stockQuantity !== undefined && stockQuantity > 0 && (
+          <span className="text-sm text-gray-500">
+            {stockQuantity} {stockQuantity === 1 ? 'item' : 'items'} available
+          </span>
+        )}
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
+        {/* Quantity selector */}
+        <div className="flex items-center h-12 border border-gray-200 rounded-full overflow-hidden bg-white">
           <button
-            className="cursor-pointer text-xl disabled:cursor-not-allowed disabled:opacity-20"
+            type="button"
+            className="w-12 h-full flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => handleQuantity('d')}
-            disabled={quantity === 1}
+            disabled={quantity <= 1 || isOutOfStock}
+            aria-label="Decrease quantity"
           >
-            -
+            <Minus className="h-4 w-4" />
           </button>
-          {quantity}
+
+          <div className="w-12 h-full flex items-center justify-center font-medium">{quantity}</div>
+
           <button
-            className="cursor-pointer text-xl disabled:cursor-not-allowed disabled:opacity-20"
+            type="button"
+            className="w-12 h-full flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => handleQuantity('i')}
-            disabled={quantity >= (stockQuantity ?? 0)}
+            disabled={quantity >= (stockQuantity ?? 0) || isOutOfStock}
+            aria-label="Increase quantity"
           >
-            +
+            <Plus className="h-4 w-4" />
           </button>
         </div>
 
-        {/* Nút thêm vào giỏ hàng */}
+        {/* Add to cart button */}
         <Button
           onClick={handleAddToCart}
-          disabled={(stockQuantity ?? 0) < 1}
-          className="w-36 text-sm rounded-3xl py-2 px-4 hover:bg-white hover:text-black disabled:cursor-not-allowed disabled:bg-gray-300 disabled:ring-0 disabled:text-gray-500"
+          disabled={isOutOfStock || !isVariantSelected || isAdding}
+          className="h-12 px-6 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-all flex-1"
         >
-          Add to Cart
+          {isAdding ? (
+            <>
+              <Check className="h-5 w-5 mr-2 animate-in zoom-in duration-300" />
+              Added!
+            </>
+          ) : (
+            <>
+              <ShoppingCart className="h-5 w-5 mr-2" />
+              {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+            </>
+          )}
         </Button>
       </div>
+
+      {!isVariantSelected && !isOutOfStock && (
+        <p className="text-amber-600 text-sm">Please select color and size first</p>
+      )}
+
+      {/* {isOutOfStock && (
+        <div className="bg-red-50 text-red-700 p-3 rounded-lg text-sm">
+          This product is currently out of stock. Please check back later or browse similar
+          products.
+        </div>
+      )} */}
     </div>
   );
 };

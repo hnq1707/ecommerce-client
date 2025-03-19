@@ -2,64 +2,69 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
-import { Bell, LogOut, ShoppingCart, SquareUser, User } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Bell, LogOut, ShoppingBag, ShoppingCart, SquareUser } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
-import Image from 'next/image';
 import { useCartStore } from '@/lib/redux/features/cart/useCartStore';
 import CartModal from '../CartModal';
 import { useAuth } from '@/lib/redux/features/auth/useAuth';
 import { useUsers } from '@/lib/redux/features/user/useUser';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 
 const NavIcons = () => {
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLoggedOut, setIsLoggedOut] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { logout } = useAuth();
   const { data: session, status } = useSession();
   const router = useRouter();
   const { user, fetchUser } = useUsers();
+  const { totalQuantity } = useCartStore();
+  const cartRef = useRef<HTMLDivElement>(null);
 
+  // Fetch user data when session changes
   useEffect(() => {
     if (session?.user?.id) {
       fetchUser(session.user.id);
     }
-  }, [session?.user?.id]);
-  useEffect(() => {
-    if (!session) {
-      setIsLoggedOut(true); // ✅ Chỉ đặt `true` khi không có session
-      setIsProfileOpen(false);
-    } else {
-      setIsLoggedOut(false); // ✅ Reset lại khi đăng nhập
-    }
-  }, [session]);
+  }, [session?.user?.id, fetchUser]);
 
-  const handleProfile = () => {
-    if (!session) {
-      router.push('/login');
-    } else {
-      setIsProfileOpen((prev) => !prev);
-    }
-  };
+  // Close cart when clicking outside
   useEffect(() => {
-    if (window.location.pathname === '/profile') {
-      setIsProfileOpen(false);
-    }
-  }, [router]);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (cartRef.current && !cartRef.current.contains(event.target as Node)) {
+        setIsCartOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleCart = () => {
+    setIsCartOpen((prev) => !prev);
+  };
+
   const handleLogout = async () => {
     setIsLoading(true);
 
     try {
-      if (session) {
-        if (session?.user?.accessToken) {
-          await logout(session.user.accessToken);
-        }
+      if (session?.user?.accessToken) {
+        await logout(session.user.accessToken);
+        await signOut({ redirect: false });
+        router.refresh();
+        router.push('/login');
       }
-      await signOut({ redirect: false });
-      setIsLoggedOut(true);
-      router.refresh();
-      router.push('/login');
     } catch (error) {
       console.error('Logout failed:', error);
     } finally {
@@ -67,75 +72,114 @@ const NavIcons = () => {
     }
   };
 
-  const { totalQuantity } = useCartStore();
-
+  // Don't render anything during initial loading
   if (status === 'loading') return null;
 
   return (
-    <div className="flex items-center gap-4 xl:gap-6 relative">
-      {status === 'authenticated' && !isLoggedOut ? (
-        <div className="relative cursor-pointer" onClick={() => setIsProfileOpen((prev) => !prev)}>
-          {session.user ? (
-            <Image
-              className="rounded-full"
-              key={user?.imageUrl}
-              src={user?.imageUrl || '/default-avatar.png'}
-              width={30}
-              height={30}
-              alt="User"
-            />
+    <div className="flex items-center gap-5 xl:gap-7 relative">
+      {/* User Profile */}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full p-0 h-10 w-10"
+            aria-label="User menu"
+          >
+            <Avatar className="h-6 w-6">
+              <AvatarImage
+                src={
+                  status === 'authenticated'
+                    ? user?.imageUrl || '/default-avatar.png'
+                    : '/default-avatar.png'
+                }
+                alt="User avatar"
+              />
+              <AvatarFallback>{user?.lastName?.charAt(0) || 'U'}</AvatarFallback>
+            </Avatar>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-64 p-1">
+          {status === 'authenticated' && session ? (
+            <>
+              <div className="px-3 py-2 text-base font-medium">{user?.lastName || 'User'}</div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild className="py-2.5">
+                <Link href="/profile" className="flex items-center gap-3 cursor-pointer text-base">
+                  <SquareUser className="h-5 w-5" />
+                  <span>Profile</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="py-2.5">
+                <Link href="/orders" className="flex items-center gap-3 cursor-pointer text-base">
+                  <ShoppingBag className="h-5 w-5" />
+                  <span>My Orders</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={handleLogout}
+                disabled={isLoading}
+                className="text-destructive focus:text-destructive py-2.5 text-base"
+              >
+                {isLoading ? (
+                  <span className="flex items-center gap-3">
+                    <div className="h-5 w-5 rounded-full border-2 border-current border-r-transparent animate-spin" />
+                    Logging out...
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-3">
+                    <LogOut className="h-5 w-5" />
+                    Logout
+                  </span>
+                )}
+              </DropdownMenuItem>
+            </>
           ) : (
-            <User />
+            <DropdownMenuItem asChild className="py-2.5">
+              <Link href="/login" className="flex items-center gap-3 cursor-pointer text-base">
+                <LogOut className="h-5 w-5 rotate-180" />
+                <span>Login</span>
+              </Link>
+            </DropdownMenuItem>
           )}
-        </div>
-      ) : (
-        <div className="relative cursor-pointer" onClick={handleProfile}>
-          <User />
-        </div>
-      )}
+        </DropdownMenuContent>
+      </DropdownMenu>
 
-      {isProfileOpen && (
-        <div className="absolute p-4 rounded-lg top-12 left-0 bg-white text-sm shadow-lg z-20 w-40 transition-all duration-200 animate-fade-in">
-          <Link
-            href="/profile"
-            className="flex items-center gap-2  py-2 px-3 rounded-md hover:bg-gray-100 transition-all duration-200"
-            onClick={() => setIsProfileOpen(false)}
-          >
-            <SquareUser/>
-            Profile
-          </Link>
-          <div
-            className="mt-2 flex items-center gap-2 py-2 px-3 rounded-md cursor-pointer hover:bg-gray-100 transition-all duration-200"
-            onClick={handleLogout}
-          >
-            {isLoading ? (
-              <span className="text-gray-500 animate-pulse">Logging out...</span>
-            ) : (
-              <>
-                <LogOut size={16} className="text-gray-600" />
-                <span>Logout</span>
-              </>
-            )}
-          </div>
-        </div>
-      )}
-      <Bell className="cursor-pointer" />
+      {/* Notifications */}
+      <Button variant="ghost" size="icon" className="relative h-12 w-12" aria-label="Notifications">
+        <Bell width={32} height={32} />
+        {/* Add this when you have notifications */}
+        <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center">3</Badge>
+      </Button>
+
       {/* Shopping Cart */}
-      <div
-        className="relative cursor-pointer hover:opacity-80 transition-all duration-200"
-        onClick={() => setIsCartOpen((prev) => !prev)}
-      >
-        <ShoppingCart
-          className="text-gray-600 hover:text-gray-800 transition-all duration-200"
-          size={28}
-        />
-        {totalQuantity > 0 && (
-          <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full text-white text-xs flex items-center justify-center font-bold shadow-md">
-            {totalQuantity}
+      <div className="relative" ref={cartRef}>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleCart}
+          className="relative h-12 w-12"
+          aria-label="Shopping cart"
+          aria-expanded={isCartOpen}
+        >
+          <ShoppingCart className="h-6 w-6" />
+          {totalQuantity > 0 && (
+            <Badge
+              className="absolute -top-1 -right-1 h-6 w-6 p-0 flex items-center justify-center bg-destructive text-base"
+              aria-label={`${totalQuantity} items in cart`}
+            >
+              {totalQuantity}
+            </Badge>
+          )}
+        </Button>
+
+        {isCartOpen && (
+          <div className="absolute right-0 z-50 mt-2 animate-in fade-in-50 zoom-in-95 duration-200">
+            <CartModal />
           </div>
         )}
       </div>
-      {isCartOpen && <CartModal />}
     </div>
   );
 };

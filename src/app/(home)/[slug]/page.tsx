@@ -17,7 +17,7 @@ const SinglePage = () => {
   const product = Array.isArray(selectedProduct) ? selectedProduct[0] : selectedProduct;
   if (loading) {
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 ">
         <Skeleton className="h-[125px] w-[250px] rounded-xl" />
         <Skeleton className="h-4 w-[250px]" />
         <Skeleton className="h-4 w-[200px]" />

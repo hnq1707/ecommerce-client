@@ -9,8 +9,8 @@ export const fetchCategories = createAsyncThunk('categories/fetchAll', async () 
 });
 
 export const fetchCategoryById = createAsyncThunk('categories/fetchById', async (id: string) => {
-  const response = await api.get<Category>(`/api/category/${id}`);
-  return response.data;
+  const response = await api.get(`/api/category/${id}`);
+  return response.data.result;
 });
 
 export const createCategory = createAsyncThunk('categories/create', async (category: Category) => {

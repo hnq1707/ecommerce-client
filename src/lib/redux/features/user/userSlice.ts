@@ -43,7 +43,6 @@ export const updateUser = createAsyncThunk(
   ) => {
     try {
       const response = await api.put(`${API_BASE_URL}/${userId}`, userData);
-      console.log(response);
       return response.data.result;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || error.message);

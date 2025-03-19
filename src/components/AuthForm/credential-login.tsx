@@ -1,7 +1,7 @@
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
-import { login2 } from '@/lib/action';
+import { login2 } from '@/lib/actions/action';
 import { useState } from 'react';
 import Link from 'next/link';
 
@@ -55,11 +55,7 @@ export default function CredentialLogin() {
             </div>
             <Input id="password" type="password" />
           </div>
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={loading}
-          >
+          <Button type="submit" className="w-full" disabled={loading}>
             {loading ? (
               <>
                 <svg className="animate-spin h-5 w-5 mr-2 text-white" viewBox="0 0 24 24">

@@ -3,7 +3,7 @@ export type Address = {
   name: string;
   street: string;
   city: string;
-  state: string;
+  district: string;
   zipCode: string;
   phoneNumber: string;
 };

@@ -12,7 +12,6 @@ import {
   RegisterResponse,
   RenewVerificationRequest,
   VerifyRequest,
-
 } from './authTypes';
 
 const API_URL = '/api/auth';
@@ -46,6 +45,7 @@ export const authenticateUser = createAsyncThunk<AuthResponse, AuthenticateReque
   async (authData, { rejectWithValue }) => {
     try {
       const response = await api.post<AuthResponse>(`${API_URL}/token`, authData);
+
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -53,13 +53,21 @@ export const authenticateUser = createAsyncThunk<AuthResponse, AuthenticateReque
   },
 );
 
-export const logoutUser = createAsyncThunk<void, LogoutRequest>(
+export const logoutUser = createAsyncThunk<any, LogoutRequest>(
   'auth/logout',
   async (requestData, { rejectWithValue }) => {
     try {
-      await api.post(`${API_URL}/logout`, requestData);
+      const response = await api.post(`${API_URL}/logout`, requestData);
+
+      // Kiểm tra nếu API trả về code không hợp lệ
+      if (response?.data?.code !== 1000) {
+        throw new Error('Lỗi khi logout: Không có mã code 1000');
+      }
+
+      return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.response.data);
+      // Xử lý lỗi và trả về thông báo lỗi
+      return rejectWithValue(error.response?.data || 'Lỗi không xác định khi logout');
     }
   },
 );

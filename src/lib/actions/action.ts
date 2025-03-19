@@ -41,7 +41,6 @@ export const updateUser = async (id: any,updateData: any) => {
     }
 
     const result = await response.json();
-    console.log('User updated:', result);
     return result;
   } catch (err) {
     console.error('Error updating user:', err);

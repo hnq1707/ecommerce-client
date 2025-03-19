@@ -6,8 +6,6 @@ import GitHub from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
 import { jwtVerify, SignJWT } from 'jose';
 
-
-
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Google,
@@ -56,9 +54,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           });
 
           const data = await response.json();
-          if (data.code === 0 && data.result) {
+          if (data.code === 1000 && data.result) {
             user.id = data.result.id;
-            user.accessToken = data.result.accessToken; // Lưu accessToken vào user
+            user.accessToken = data.result.accessToken; 
           } else {
             const createResponse = await fetch(`${BASE_URL}/api/auth/check-user`, {
               method: 'POST',
@@ -102,6 +100,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user = {
         id: token.id,
         email: token.email,
+        accessToken: token.accessToken,
       };
       session.accessToken = token.accessToken;
       return session;
@@ -113,7 +112,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return new SignJWT(token as any)
         .setProtectedHeader({ alg: 'HS512' })
         .setIssuedAt()
-        .setExpirationTime('1h')
+        .setExpirationTime('1d')
         .sign(new TextEncoder().encode(Array.isArray(secret) ? secret[0] : secret));
     },
     decode: async ({ secret, token }) => {
