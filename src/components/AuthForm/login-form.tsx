@@ -1,22 +1,12 @@
 'use client';
-import { cn } from "@/lib/utils"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { cn } from '@/lib/utils/utils';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-import GitHubLogin from "./github-login";
-import GoogleLogin from "./google-login";
-import CredentialLogin from "./credential-login";
+import GitHubLogin from './github-login';
+import GoogleLogin from './google-login';
+import CredentialLogin from './credential-login';
 
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<"div">) {
- 
+export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>

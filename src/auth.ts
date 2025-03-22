@@ -4,7 +4,7 @@ import NextAuth, { Session } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import GitHub from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
-import { jwtVerify, SignJWT } from 'jose';
+import { decodeJwt, jwtVerify, SignJWT } from 'jose';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -26,12 +26,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         const json = await res.json();
         const user = json.result;
+        const decoded = decodeJwt<{ scope?: string }>(user.accessToken);
+
         console.log(user);
         if (res.ok && user)
           return {
             id: user.id,
             email: user.email,
             accessToken: user.accessToken,
+            scope: decoded.scope as string | undefined,
           };
         return null;
       },
@@ -56,7 +59,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const data = await response.json();
           if (data.code === 1000 && data.result) {
             user.id = data.result.id;
-            user.accessToken = data.result.accessToken; 
+            user.accessToken = data.result.accessToken;
           } else {
             const createResponse = await fetch(`${BASE_URL}/api/auth/check-user`, {
               method: 'POST',
@@ -86,6 +89,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.id = user.id;
         token.email = user.email;
         token.accessToken = user.accessToken;
+        token.scope = user.scope;
       }
 
       return token;
@@ -101,6 +105,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         id: token.id,
         email: token.email,
         accessToken: token.accessToken,
+        scope: token.scope,
       };
       session.accessToken = token.accessToken;
       return session;

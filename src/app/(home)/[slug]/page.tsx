@@ -10,6 +10,13 @@ import useProducts from '@/lib/redux/features/product/useProductStore';
 const SinglePage = () => {
   const { slug } = useParams();
   const { selectedProduct, loading, error, getProductBySlug } = useProducts();
+  const formatCurrency = (amount: number) => {
+    amount = amount * 23000;
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(amount);
+  };
 
   useEffect(() => {
     getProductBySlug(slug as string);
@@ -48,7 +55,7 @@ const SinglePage = () => {
         <h1 className="text-4xl font-medium">{product.name}</h1>
         <p className="text-gray-500">{product.description}</p>
         <div className="h-[2px] bg-gray-100" />
-        <h2 className="font-medium text-2xl">${product.price}</h2>
+        <h2 className="font-medium text-2xl">${formatCurrency(product.price)}</h2>
         <div className="h-[2px] bg-gray-100" />
 
         <CustomizeProducts product={product} />

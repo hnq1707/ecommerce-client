@@ -1,3 +1,5 @@
+'use client';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/lib/redux/store';
 import {
@@ -5,11 +7,14 @@ import {
   updatePaymentStatus,
   cancelOrder,
   getUserOrders,
+  getAllOrders,
+  updateOrderStatus, // Import thunk updateOrderStatus
   clearCurrentOrder,
   clearOrderDetails,
   resetPaymentStatus,
 } from '@/lib/redux/features/order/orderSlice';
 import { OrderRequest } from '@/lib/redux/features/order/orderSlice';
+import { Order } from '@/lib/type/Order';
 
 export const useOrder = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -28,7 +33,13 @@ export const useOrder = () => {
   const updatePayment = (orderId: string, paymentIntentId: string, status: string) =>
     dispatch(updatePaymentStatus({ orderId, paymentIntentId, status }));
   const cancelUserOrder = (orderId: string) => dispatch(cancelOrder(orderId));
-  const fetchUserOrders = () => dispatch(getUserOrders());
+  const fetchUserOrders = (page?: number, size?: number, sortBy?: string) =>
+    dispatch(getUserOrders({ page, size, sortBy }));
+  const fetchAllOrders = (page?: number, size?: number, sortBy?: string) =>
+    dispatch(getAllOrders({ page, size, sortBy }));
+  // Thêm hàm updateOrderStatus
+  const updateStatus = (id: string, status: Order['orderStatus']) =>
+    dispatch(updateOrderStatus({ id, status }));
   const clearCurrent = () => dispatch(clearCurrentOrder());
   const clearDetails = () => dispatch(clearOrderDetails());
   const resetPayment = () => dispatch(resetPaymentStatus());
@@ -45,6 +56,8 @@ export const useOrder = () => {
     updatePayment,
     cancelUserOrder,
     fetchUserOrders,
+    fetchAllOrders,
+    updateStatus,
     clearCurrent,
     clearDetails,
     resetPayment,

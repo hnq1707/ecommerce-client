@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import api from '@/lib/utils/api';
-import { Product } from '@/lib/type/Product';
+import { Product, ProductRequest } from '@/lib/type/Product';
 
 export const fetchProducts = createAsyncThunk(
   'products/fetchAll',
@@ -38,10 +38,13 @@ export const fetchProductBySlug = createAsyncThunk('products/fetchBySlug', async
   return response.data.result.content.length > 0 ? response.data.result.content[0] : null;
 });
 
-export const createProduct = createAsyncThunk('products/create', async (product: Product) => {
-  const response = await api.post<Product>('/products', product);
-  return response.data;
-});
+export const createProduct = createAsyncThunk(
+  'products/create',
+  async (product: ProductRequest) => {
+    const response = await api.post<Product>('/products', product);
+    return response.data;
+  },
+);
 
 export const updateProduct = createAsyncThunk(
   'products/update',
@@ -50,6 +53,10 @@ export const updateProduct = createAsyncThunk(
     return response.data;
   },
 );
+export const deleteProduct = createAsyncThunk('products/delete', async (id: string) => {
+  await api.delete(`/products/${id}`);
+  return id; // trả về id của sản phẩm đã xóa
+});
 
 // Slice
 const productSlice = createSlice({
@@ -109,6 +116,20 @@ const productSlice = createSlice({
         state.products = state.products.map((product) =>
           product.id === action.payload.id ? action.payload : product,
         );
+      })
+       .addCase(deleteProduct.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        // Loại bỏ sản phẩm có id trùng với payload
+        state.products = state.products.filter(
+          (product) => product.id !== action.payload,
+        );
+      })
+      .addCase(deleteProduct.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to delete product';
       });
   },
 });

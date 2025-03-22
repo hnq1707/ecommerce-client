@@ -20,6 +20,13 @@ export default function OrderList({ orders = [] }: OrderListProps) {
   if (!orders || orders.length === 0) {
     return <p>Đang tải danh sách đơn hàng...</p>;
   }
+  const formatCurrency = (amount: number) => {
+    amount = amount * 23000;
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(amount);
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -168,7 +175,7 @@ export default function OrderList({ orders = [] }: OrderListProps) {
                             {item.product.name} x{item.quantity}
                           </span>
                           <span className="font-medium">
-                            ${((item.product.price ?? 0) * (item.quantity ?? 0)).toFixed(2)}
+                            ${formatCurrency((item.product.price ?? 0) * (item.quantity ?? 0))}
                           </span>
                         </li>
                       ))}
@@ -182,7 +189,7 @@ export default function OrderList({ orders = [] }: OrderListProps) {
 
                   <div className="flex justify-between font-medium">
                     <span>Tổng cộng</span>
-                    <span className="text-lg">${(formattedOrder.totalPrice ?? 0).toFixed(2)}</span>
+                    <span className="text-lg">${formatCurrency(formattedOrder.totalPrice ?? 0)}</span>
                   </div>
                 </div>
               </CardContent>

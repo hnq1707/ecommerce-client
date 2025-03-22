@@ -265,7 +265,7 @@ const ProfilePage = () => {
             Đang xử lý
           </Badge>
         );
-      case 'CONFIRMED':
+      case 'IN_PROGRESS':
         return (
           <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">
             Đã xác nhận
@@ -298,7 +298,7 @@ const ProfilePage = () => {
     switch (status) {
       case 'PENDING':
         return <ShoppingBag className="h-5 w-5 text-yellow-500" />;
-      case 'CONFIRMED':
+      case 'IN_PROGRESS':
         return <Package className="h-5 w-5 text-blue-500" />;
       case 'SHIPPED':
         return <Truck className="h-5 w-5 text-indigo-500" />;

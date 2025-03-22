@@ -34,6 +34,13 @@ export default function OrderDetailPage() {
     }).format(date);
   };
 
+  const formatCurrency = (amount: number) => {
+    amount = amount * 23000;
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(amount);
+  };
 
 
   const getStatusBadge = (status: string) => {
@@ -136,7 +143,7 @@ export default function OrderDetailPage() {
                           width={80}
                           height={80}
                           src={
-                            item.product.resources.find((r) => r.isPrimary)?.url ||
+                            item.product.thumbnail ||
                             '/placeholder.svg?height=80&width=80'
                           }
                           alt={item.product.name}
@@ -171,7 +178,7 @@ export default function OrderDetailPage() {
                         </div>
                         <div className="flex justify-between mt-2">
                           <span className="text-sm">SL: {item.quantity}</span>
-                          <span className="font-medium">{item.itemPrice.toFixed(2)} USD</span>
+                          <span className="font-medium">{formatCurrency(item.itemPrice)} USD</span>
                         </div>
                       </div>
                     </div>
@@ -182,7 +189,7 @@ export default function OrderDetailPage() {
 
                 <div className="flex justify-between items-center font-semibold">
                   <span>Tổng cộng</span>
-                  <span className="text-lg">{order.totalPrice.toFixed(2)} USD</span>
+                  <span className="text-lg">{formatCurrency(order.totalPrice)} USD</span>
                 </div>
               </div>
             </CardContent>

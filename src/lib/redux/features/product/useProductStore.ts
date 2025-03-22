@@ -6,11 +6,12 @@ import {
   fetchProductById,
   createProduct,
   updateProduct,
-  fetchProductBySlug
+  fetchProductBySlug,
+  deleteProduct
   
 } from '@/lib/redux/features/product/productSlice';
 import { RootState, AppDispatch } from '@/lib/redux/store';
-import { Product } from '@/lib/type/Product';
+import { Product, ProductRequest } from '@/lib/type/Product';
 
 const useProducts = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -31,7 +32,7 @@ const useProducts = () => {
   };
 
   // Hàm tạo sản phẩm mới
-  const addProduct = (product: Product) => {
+  const addProduct = (product: ProductRequest) => {
     dispatch(createProduct(product));
   };
 
@@ -39,6 +40,9 @@ const useProducts = () => {
   const modifyProduct = (id: string, product: Product) => {
     dispatch(updateProduct({ id, product }));
   };
+    const removeProduct = (id: string) => {
+      dispatch(deleteProduct(id));
+    };
 
   return {
     products,
@@ -53,6 +57,7 @@ const useProducts = () => {
     getProductBySlug,
     addProduct,
     modifyProduct,
+    removeProduct
   };
 };
 

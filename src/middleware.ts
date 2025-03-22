@@ -26,11 +26,10 @@ export async function middleware(req: NextRequest) {
       }
     }
   }
-console.log(scope)
   // Xác định quyền truy cập dashboard dựa trên scope
   // Ví dụ: chỉ cho phép nếu scope chứa 'admin' hoặc 'manager'
   const canAccessDashboard: boolean = scope.includes('ADMIN') || scope.includes('MANAGER');
-
+  
   // Nếu user đã xác thực và đang cố truy cập các trang auth (login, register)
   if (isAuth && isAuthPage) {
     return NextResponse.redirect(new URL('/', req.url));

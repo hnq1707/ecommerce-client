@@ -181,6 +181,50 @@ export const getUserOrders = createAsyncThunk(
     }
   },
 );
+export const getAllOrders = createAsyncThunk(
+  'order/getAllOrders',
+  async (
+    { page = 0, size = 8, sortBy = 'newest' }: { page?: number; size?: number; sortBy?: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      // Mapping sắp xếp từ frontend sang query parameter cho backend
+      const sortMapping: Record<string, string> = {
+        newest: 'orderDate,desc',
+        oldest: 'orderDate,asc',
+        'price-high': 'totalAmount,desc',
+        'price-low': 'totalAmount,asc',
+      };
+      const sortQuery = sortMapping[sortBy] || sortMapping['newest'];
+
+      // Gọi API với endpoint dành cho quản trị viên (ví dụ: /api/order/all)
+      const response = await api.get<PaginatedResponse<Order>>(
+        `/api/order?page=${page}&size=${size}&sort=${sortQuery}`,
+      );
+      const data = response.data;
+      if (data.code !== 1000) {
+        return rejectWithValue(data.message || 'Không thể lấy danh sách đơn hàng');
+      }
+      return data.result;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Không thể lấy danh sách đơn hàng');
+    }
+  },
+  
+);
+export const updateOrderStatus = createAsyncThunk(
+  'order/updateOrderStatus',
+  async ({ id, status }: { id: string; status: Order['orderStatus'] }, { rejectWithValue }) => {
+    try {
+      const response = await api.post(`/api/order/update-status/${id}`, status);
+      return response.data.result;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Không thể cập nhật trạng thái đơn hàng',
+      );
+    }
+  },
+);
 
 const orderSlice = createSlice({
   name: 'order',
@@ -208,7 +252,6 @@ const orderSlice = createSlice({
         state.loading = false;
         if (action.payload) {
           state.currentOrder = action.payload;
-          
         } else {
           state.error = 'Order creation failed';
         }
@@ -277,6 +320,24 @@ const orderSlice = createSlice({
         },
       )
       .addCase(getUserOrders.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(getAllOrders.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        getAllOrders.fulfilled,
+        (state, action: PayloadAction<PaginatedResponse<Order>['result']>) => {
+          state.loading = false;
+          state.orders = action.payload.content;
+          state.totalPages = action.payload.totalPages;
+          state.totalElements = action.payload.totalElements;
+          state.currentPage = action.payload.number;
+        },
+      )
+      .addCase(getAllOrders.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

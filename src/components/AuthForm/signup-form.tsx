@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,7 +10,6 @@ import GitHubLogin from './github-login';
 import GoogleLogin from './google-login';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-
 
 export function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const router = useRouter();
@@ -24,7 +23,6 @@ export function SignupForm({ className, ...props }: React.ComponentPropsWithoutR
     password: '',
   });
   const [loading, setLoading] = useState(false);
-  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -45,13 +43,11 @@ export function SignupForm({ className, ...props }: React.ComponentPropsWithoutR
       sessionStorage.setItem('email', formData.email);
       console.log('Redirecting to /verify...');
       router.push('/verify');
-
     } catch (err) {
       setError((err as any).message);
-    
     } finally {
-    setLoading(false); // Tắt loading khi hoàn thành
-  }
+      setLoading(false); // Tắt loading khi hoàn thành
+    }
   };
 
   return (

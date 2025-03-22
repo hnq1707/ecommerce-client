@@ -1,7 +1,9 @@
+import StoreProvider from '@/lib/redux/StoreProvider';
 import './globals.css';
 import type { Metadata } from 'next';
 import { SessionProvider } from 'next-auth/react';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { Toaster } from 'react-hot-toast';
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -21,7 +23,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>
+          <StoreProvider>
+            {children}
+            <Toaster position="top-right" />
+          </StoreProvider>
+        </SessionProvider>
       </body>
     </html>
   );

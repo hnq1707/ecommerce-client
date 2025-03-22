@@ -7,11 +7,9 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import ProductListSkeleton from '@/components/Product/ProductListSkeleton';
 import CategoryListSkeleton from '@/components/Category/CategoryListSkeleton';
-import { auth } from '@/auth';
 
 export default async function Home() {
-  const session = await auth()
-  console.log(session)
+
   return (
     <div className="min-h-screen">
       {/* Hero Carousel */}

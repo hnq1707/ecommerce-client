@@ -89,7 +89,7 @@ export default function OrderConfirmationPage() {
                   className="flex items-center gap-4 p-3 rounded-lg border bg-white shadow-sm"
                 >
                   <Image
-                    src={item.product.resources.find((a) => a.isPrimary)?.url || '/product.jpeg'}
+                    src={item.product.thumbnail|| '/product.jpeg'}
                     alt={item.product.name}
                     width={60}
                     height={60}

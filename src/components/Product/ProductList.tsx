@@ -25,16 +25,15 @@ const ProductList: React.FC<ProductListProps> = ({ categoryId, typeId, sort, pag
   const { addItem } = useCartStore();
   const searchParams = useSearchParams();
   const nameFilter = searchParams.get('name') || '';
- const [initialized, setInitialized] = useState(false);
+  const [initialized, setInitialized] = useState(false);
 
- useEffect(() => {
-   if (!initialized) {
-     setInitialized(true);
-     return;
-   }
-   getProducts(categoryId, typeId, sort, (page ?? 1) - 1);
- }, [categoryId, typeId, sort, page, initialized]);
-
+  useEffect(() => {
+    if (!initialized) {
+      setInitialized(true);
+      return;
+    }
+    getProducts(categoryId, typeId, sort, (page ?? 1) - 1);
+  }, [categoryId, typeId, sort, page, initialized]);
   const handleAddToCart = (product: Product) => {
     const cartItem: CartItem = {
       ...product,
@@ -133,14 +132,20 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNow }) => {
-  const primaryImage = '/product.jpeg';
+  const formatCurrency = (amount: number) => {
+    amount = amount * 23000;
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(amount);
+  };
 
   return (
     <div className="w-full sm:w-[45%] lg:w-[22%] flex flex-col gap-4 bg-white shadow-md rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl">
       <Link href={`/${product.slug}`} className="w-full group">
         <div className="relative w-full h-64 overflow-hidden">
           <Image
-            src={primaryImage || '/placeholder.svg'}
+            src={product.thumbnail || '/placeholder.svg'}
             alt={product.name}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 45vw, 22vw"
@@ -171,7 +176,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onBuyNo
           <span className="text-sm text-gray-500 ml-1">({product.rating})</span>
         </div>
 
-        <span className="font-bold text-xl text-blue-600">${product.price.toLocaleString()}</span>
+        <span className="font-bold text-xl text-blue-600">{formatCurrency(product.price)}</span>
 
         <div className="grid grid-cols-2 gap-2 mt-2">
           <Button

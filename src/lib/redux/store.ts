@@ -5,6 +5,8 @@ import categoryReducer from './features/category/categorySlice';
 import authReducer from './features/auth/authSlice';
 import userReducer from './features/user/userSlice';
 import orderReducer from './features/order/orderSlice';
+import roleReducer from './features/roles/roleSlice';
+import invoiceReducer from './features/invoice/invoiceSlice';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // Sử dụng localStorage
 import { combineReducers } from 'redux';
@@ -23,7 +25,9 @@ const rootReducer = combineReducers({
   category: categoryReducer,
   auth: authReducer,
   user: userReducer,
-  order:orderReducer
+  order:orderReducer,
+  role: roleReducer,
+  invoice: invoiceReducer,
 });
 
 // Tạo persisted reducer

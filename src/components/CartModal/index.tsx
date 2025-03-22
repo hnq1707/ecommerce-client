@@ -47,9 +47,14 @@ const CartModal = ({ onClose }: CartModalProps) => {
   };
 
   // Format price with 2 decimal places and $ sign
-  const formatPrice = (price: number) => {
-    return `$${price.toFixed(2)}`;
-  };
+   const formatCurrency = (amount: number) => {
+     amount = amount * 23000;
+     return new Intl.NumberFormat('vi-VN', {
+       style: 'currency',
+       currency: 'VND',
+     }).format(amount);
+   };
+
 
   // Handle quantity change
   const handleQuantityChange = (itemId: string, newQuantity: number) => {
@@ -123,7 +128,7 @@ const CartModal = ({ onClose }: CartModalProps) => {
                       {item.name}
                     </Link>
                     <span className="text-sm font-semibold ml-2 whitespace-nowrap">
-                      {formatPrice(item.price)}
+                      {formatCurrency(item.price)}
                     </span>
                   </div>
 
@@ -164,7 +169,7 @@ const CartModal = ({ onClose }: CartModalProps) => {
           <div className="p-4 bg-gray-50 border-t">
             <div className="flex justify-between items-center mb-2">
               <span className="text-gray-600">Subtotal</span>
-              <span className="font-semibold">{formatPrice(totalPrice)}</span>
+              <span className="font-semibold">{formatCurrency(totalPrice)}</span>
             </div>
 
             <p className="text-gray-500 text-xs mb-4">Shipping and taxes calculated at checkout</p>
