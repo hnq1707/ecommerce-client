@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { RevenueDataDTO } from '@/lib/utils/statistic';
+import { BarDatum } from '@nivo/bar';
 import dynamic from 'next/dynamic';
 
 // Sử dụng dynamic import với ssr: false để tránh lỗi hydration
@@ -14,13 +15,25 @@ interface RevenueChartProps {
 }
 
 export function RevenueChart({ data, loading }: RevenueChartProps) {
-      const formatCurrency = (amount: number) => {
-        amount = amount * 23000;
-        return new Intl.NumberFormat('vi-VN', {
-          style: 'currency',
-          currency: 'VND',
-        }).format(amount);
-      };
+  /**
+   * Hàm formatCurrency giờ chỉ định dạng số -> tiền tệ (không nhân 23000).
+   * Việc chuyển từ USD sang VND sẽ làm ở chartData.
+   */
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(amount);
+  };
+
+  /**
+   * Chuyển đổi doanh thu từ USD -> VND trước khi truyền vào biểu đồ.
+   * Giả sử 'revenue' trong data gốc là USD, ta nhân 23000 để có VND.
+   */
+  const chartData: BarDatum[] = data.map((item) => ({
+    month: item.month,
+    revenue: item.revenue * 23000, // Chuyển USD -> VND tại đây
+  }));
 
   return (
     <Card>
@@ -35,7 +48,7 @@ export function RevenueChart({ data, loading }: RevenueChartProps) {
           </div>
         ) : (
           <ResponsiveBar
-            data={data}
+            data={chartData}
             keys={['revenue']}
             indexBy="month"
             margin={{ top: 20, right: 30, bottom: 50, left: 80 }}
@@ -52,7 +65,8 @@ export function RevenueChart({ data, loading }: RevenueChartProps) {
               legend: 'Doanh thu (VNĐ)',
               legendPosition: 'middle',
               legendOffset: -60,
-              format: (value) => `${value / 1000000}M`,
+              format: (value) => `${(value / 1_000_000).toFixed(2)}M`,
+              
             }}
             axisBottom={{
               tickSize: 5,
@@ -66,11 +80,9 @@ export function RevenueChart({ data, loading }: RevenueChartProps) {
             labelSkipHeight={12}
             labelTextColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
             animate={true}
-            motionStiffness={90}
-            motionDamping={15}
             tooltip={({ value }) => (
               <div className="bg-white p-2 shadow-md rounded-md border">
-                <strong>{formatCurrency(value)}</strong>
+                <strong>{formatCurrency(value as number)}</strong>
               </div>
             )}
             theme={{

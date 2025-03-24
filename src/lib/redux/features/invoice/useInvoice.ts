@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch } from '@/lib/redux/store';
-import { fetchInvoices, fetchInvoiceById } from '@/lib/redux/features/invoice/invoiceSlice';
+import { fetchInvoices, fetchInvoiceById, createInvoice } from '@/lib/redux/features/invoice/invoiceSlice';
 import { RootState } from '@/lib/redux/store';
 
 type FilterType = 'all' | 'paid' | 'unpaid';
@@ -19,6 +19,10 @@ const useInvoices = () => {
   const getInvoiceById = (id: string) => {
     dispatch(fetchInvoiceById(id));
   };
+  const createNewInvoice = (orderId: string) => {
+    dispatch(createInvoice(orderId));
+  };
+
 
   return {
     invoices,
@@ -30,6 +34,7 @@ const useInvoices = () => {
     totalItems,
     getInvoices,
     getInvoiceById,
+    createNewInvoice
   };
 };
 

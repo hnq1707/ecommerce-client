@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import api from '@/lib/utils/api';
 import { Invoice } from '@/lib/type/Invoice';
@@ -32,6 +33,17 @@ export const fetchInvoices = createAsyncThunk(
     }
     const response = await api.get(`${endpoint}?page=${page}&size=${size}`);
     return response.data.result;
+  },
+);
+export const createInvoice = createAsyncThunk(
+  'invoices/create',
+  async (orderId: string, { rejectWithValue }) => {
+    try {
+      const response = await api.post<Invoice>('/api/invoices', null, { params: { orderId } });
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || 'Failed to create invoice');
+    }
   },
 );
 
@@ -81,6 +93,17 @@ const invoiceSlice = createSlice({
       .addCase(fetchInvoiceById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Failed to fetch invoice';
+      })
+      .addCase(createInvoice.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(createInvoice.fulfilled, (state, action) => {
+        state.loading = false;
+        state.invoices.push(action.payload);
+      })
+      .addCase(createInvoice.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });
