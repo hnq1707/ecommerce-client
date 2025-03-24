@@ -178,7 +178,7 @@ export default function OrderDetailPage() {
                         </div>
                         <div className="flex justify-between mt-2">
                           <span className="text-sm">SL: {item.quantity}</span>
-                          <span className="font-medium">{formatCurrency(item.itemPrice)} USD</span>
+                          <span className="font-medium">{formatCurrency(item.itemPrice)}</span>
                         </div>
                       </div>
                     </div>
@@ -189,7 +189,7 @@ export default function OrderDetailPage() {
 
                 <div className="flex justify-between items-center font-semibold">
                   <span>Tổng cộng</span>
-                  <span className="text-lg">{formatCurrency(order.totalPrice)} USD</span>
+                  <span className="text-lg">{formatCurrency(order.totalPrice)}</span>
                 </div>
               </div>
             </CardContent>

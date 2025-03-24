@@ -175,7 +175,7 @@ export default function OrderList({ orders = [] }: OrderListProps) {
                             {item.product.name} x{item.quantity}
                           </span>
                           <span className="font-medium">
-                            ${formatCurrency((item.product.price ?? 0) * (item.quantity ?? 0))}
+                            {formatCurrency((item.product.price ?? 0) * (item.quantity ?? 0))}
                           </span>
                         </li>
                       ))}
@@ -189,7 +189,7 @@ export default function OrderList({ orders = [] }: OrderListProps) {
 
                   <div className="flex justify-between font-medium">
                     <span>Tổng cộng</span>
-                    <span className="text-lg">${formatCurrency(formattedOrder.totalPrice ?? 0)}</span>
+                    <span className="text-lg">{formatCurrency(formattedOrder.totalPrice ?? 0)}</span>
                   </div>
                 </div>
               </CardContent>

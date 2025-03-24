@@ -15,15 +15,12 @@ export function OrderSummary({ items, subtotal, discount, total }: OrderSummaryP
       <div className="space-y-4">
         {items.map((item) => {
           // Kiểm tra resources có tồn tại không và có phải mảng không
-          const imageUrl = Array.isArray(item.resources)
-            ? item.resources.find((res) => res.isPrimary)?.url || item.resources[0]?.url
-            : (item.resources as { url: string })?.url;
-
+          
           return (
             <div key={item.id} className="flex items-start gap-4">
               <div className="relative h-20 w-20 overflow-hidden rounded-md border">
                 <Image
-                  src={imageUrl || '/placeholder.svg'}
+                  src={item.thumbnail || '/placeholder.svg'}
                   alt={item.name}
                   fill
                   className="object-cover"

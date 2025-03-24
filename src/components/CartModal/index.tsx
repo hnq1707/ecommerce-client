@@ -47,14 +47,13 @@ const CartModal = ({ onClose }: CartModalProps) => {
   };
 
   // Format price with 2 decimal places and $ sign
-   const formatCurrency = (amount: number) => {
-     amount = amount * 23000;
-     return new Intl.NumberFormat('vi-VN', {
-       style: 'currency',
-       currency: 'VND',
-     }).format(amount);
-   };
-
+  const formatCurrency = (amount: number) => {
+    amount = amount * 23000;
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(amount);
+  };
 
   // Handle quantity change
   const handleQuantityChange = (itemId: string, newQuantity: number) => {

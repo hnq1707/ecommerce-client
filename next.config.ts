@@ -22,9 +22,12 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'codedev.b-cdn.net',
       },
+      {
+        protocol: 'https',
+        hostname: 'file.hstatic.net',
+      },
     ],
   },
 };
 
 module.exports = nextConfig;
-

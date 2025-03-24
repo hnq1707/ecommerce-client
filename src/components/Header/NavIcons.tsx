@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import NotificationBell from '../notification/notification-bell';
 
 const NavIcons = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -147,11 +148,7 @@ const NavIcons = () => {
       </DropdownMenu>
 
       {/* Notifications */}
-      <Button variant="ghost" size="icon" className="relative h-12 w-12" aria-label="Notifications">
-        <Bell width={32} height={32} />
-        {/* Add this when you have notifications */}
-        <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center">3</Badge>
-      </Button>
+      <NotificationBell />
 
       {/* Shopping Cart */}
       <div className="relative" ref={cartRef}>

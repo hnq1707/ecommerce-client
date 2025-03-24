@@ -34,6 +34,14 @@ export default function OrderConfirmationPage() {
   // Redux state
   const orderDetails = useSelector(selectOrderDetails);
   const isLoading = useSelector(selectOrderLoading);
+  const formatCurrency = (amount: number) => {
+    amount = amount * 23000;
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(amount);
+  };
+
   // Lấy thông tin đơn hàng
   useEffect(() => {
     dispatch(getOrderDetails(orderId as string));
@@ -89,7 +97,7 @@ export default function OrderConfirmationPage() {
                   className="flex items-center gap-4 p-3 rounded-lg border bg-white shadow-sm"
                 >
                   <Image
-                    src={item.product.thumbnail|| '/product.jpeg'}
+                    src={item.product.thumbnail || '/product.jpeg'}
                     alt={item.product.name}
                     width={60}
                     height={60}
@@ -99,7 +107,7 @@ export default function OrderConfirmationPage() {
                     <h3 className="text-sm font-medium">{item.product.name}</h3>
                     <p className="text-sm text-muted-foreground">Số lượng: {item.quantity}</p>
                   </div>
-                  <span className="font-semibold">{item.itemPrice} USD</span>
+                  <span className="font-semibold">{formatCurrency(item.itemPrice)}</span>
                 </div>
               ))}
             </div>

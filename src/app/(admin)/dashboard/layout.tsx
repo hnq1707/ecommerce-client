@@ -19,7 +19,6 @@ import {
   ShieldCheck,
   Loader2,
   User,
-  Bell,
   Search,
   ChevronDown,
   X,
@@ -45,6 +44,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { motion } from 'framer-motion';
 import { AuthProvider } from '@/lib/utils/auth/auth-provider';
 import PermissionGuard from '@/components/auth/permission-guard';
+import AdminNotificationBell from '@/components/admin-notification/admin-notification-bell';
 
 interface NavItem {
   title: string;
@@ -401,41 +401,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 />
               </form>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="icon" className="relative">
-                    <Bell className="h-5 w-5" />
-                    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
-                      3
-                    </span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-80">
-                  <DropdownMenuLabel>Thông báo</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <ScrollArea className="h-[300px]">
-                    {[1, 2, 3].map((item) => (
-                      <DropdownMenuItem
-                        key={item}
-                        className="flex flex-col items-start p-4 cursor-pointer"
-                      >
-                        <div className="flex w-full">
-                          <div className="font-medium">Đơn hàng mới #{1000 + item}</div>
-                          <div className="ml-auto text-xs text-muted-foreground">1 giờ trước</div>
-                        </div>
-                        <div className="text-sm text-muted-foreground mt-1">
-                          Khách hàng vừa đặt đơn hàng mới, vui lòng kiểm tra.
-                        </div>
-                      </DropdownMenuItem>
-                    ))}
-                  </ScrollArea>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild className="justify-center font-medium">
-                    <Link href="/dashboard/notifications">Xem tất cả thông báo</Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
+              <AdminNotificationBell />
               {status === 'authenticated' && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>

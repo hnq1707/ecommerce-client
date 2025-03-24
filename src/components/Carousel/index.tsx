@@ -159,7 +159,7 @@ const Carousel = () => {
                 src={slide.img || '/placeholder.svg'}
                 alt={slide.title}
                 fill
-                priority={index === 0}
+                priority
                 sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover animate-in fade-in duration-1000"
                 onLoad={(e) => {

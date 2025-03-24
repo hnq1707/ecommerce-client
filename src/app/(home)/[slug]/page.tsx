@@ -55,7 +55,7 @@ const SinglePage = () => {
         <h1 className="text-4xl font-medium">{product.name}</h1>
         <p className="text-gray-500">{product.description}</p>
         <div className="h-[2px] bg-gray-100" />
-        <h2 className="font-medium text-2xl">${formatCurrency(product.price)}</h2>
+        <h2 className="font-medium text-2xl">{formatCurrency(product.price)}</h2>
         <div className="h-[2px] bg-gray-100" />
 
         <CustomizeProducts product={product} />
