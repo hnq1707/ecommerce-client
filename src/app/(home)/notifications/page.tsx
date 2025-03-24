@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import type React from 'react';
@@ -35,6 +37,7 @@ import { useNotifications } from '@/hooks/use-notification';
 import NotificationItem from '@/components/notification/notification-item';
 import type { Notification, NotificationType } from '@/lib/type/Notification';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 
 export default function NotificationsPage() {
   const searchParams = useSearchParams();
@@ -235,7 +238,7 @@ export default function NotificationsPage() {
         )}
       {status === 'unauthenticated' && (
         <Button variant="default" className="mt-4" asChild>
-          <a href="/auth/signin">Đăng nhập</a>
+          <Link href="/auth/signin">Đăng nhập</Link>
         </Button>
       )}
     </div>

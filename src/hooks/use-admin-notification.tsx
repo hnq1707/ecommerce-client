@@ -180,7 +180,6 @@ export function useNotifications() {
       if (!response.ok) throw new Error('Không thể tải thông báo');
 
       const data = await response.json();
-      console.log('Dữ liệu thông báo admin từ API:', data);
 
       // Xử lý dữ liệu dựa trên cấu trúc trả về
       if (Array.isArray(data)) {

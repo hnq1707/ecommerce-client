@@ -42,7 +42,7 @@ export default function InvoicesPage() {
   const [currentInvoice, setCurrentInvoice] = useState<any>(null);
 
   // Lấy dữ liệu từ Redux thông qua custom hook
-  const { invoices, loading, error, getInvoices } = useInvoices();
+  const { invoices, loading, getInvoices } = useInvoices();
 
   // Hàm xử lý tìm kiếm, thay đổi bộ lọc theo trạng thái
   const handleSearch = () => {
@@ -169,7 +169,7 @@ export default function InvoicesPage() {
             <div className="text-2xl font-bold">
               {formatCurrency(
                 invoices
-                  .filter((i) => !i.isPaid)
+                  .filter((i) => i.isPaid)
                   .reduce((sum, invoice) => sum + invoice.totalPrice, 0),
               )}
             </div>

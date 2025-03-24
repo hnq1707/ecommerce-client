@@ -178,7 +178,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       >
         <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
           <ShoppingBag className="h-6 w-6 text-primary" />
-          {!isCollapsed && <span>Admin Dashboard</span>}
+          {!isCollapsed && <span className="text-2xl font-semibold tracking-wide">HNQ </span>}
         </Link>
         {!isMobile && (
           <Button

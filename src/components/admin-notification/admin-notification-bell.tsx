@@ -21,7 +21,7 @@ export default function AdminNotificationBell() {
     // Cập nhật thông báo mỗi 30 giây
     const interval = setInterval(() => {
       fetchNotifications();
-    }, 30000);
+    }, 1500000);
 
     return () => clearInterval(interval);
   }, []);

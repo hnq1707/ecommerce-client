@@ -18,7 +18,7 @@ const Navbar = () => {
         {/* MOBILE */}
         <div className="h-full flex items-center justify-between md:hidden">
           <Link href="/" className="flex items-center">
-            <span className="text-3xl font-semibold tracking-wide">LAMA</span>
+            <span className="text-3xl font-semibold tracking-wide">HNQ</span>
           </Link>
           <div className="flex items-center gap-3">
             <SearchBar compact />
