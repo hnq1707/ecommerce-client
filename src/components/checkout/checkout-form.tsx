@@ -20,6 +20,7 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { OrderSummary } from './order-summary';
 import { AddressSelection } from './address-selection';
+import { CouponSelector } from '../coupon/coupon-selector';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   createOrder,
@@ -28,12 +29,13 @@ import {
   selectOrderLoading,
   type OrderRequest,
 } from '@/lib/redux/features/order/orderSlice';
-import { AppDispatch } from '@/lib/redux/store';
+import type { AppDispatch } from '@/lib/redux/store';
 import { useUsers } from '@/lib/redux/features/user/useUser';
 import { useSession } from 'next-auth/react';
-import { Address } from '@/lib/type/Address';
+import type { Address } from '@/lib/type/Address';
 import { useCartStore } from '@/lib/redux/features/cart/useCartStore';
-import { CartItem } from '@/lib/type/CartItem';
+import type { CartItem } from '@/lib/type/CartItem';
+import type { Coupon } from '@/lib/utils/coupon-service';
 
 export default function CheckoutForm() {
   const router = useRouter();
@@ -48,15 +50,19 @@ export default function CheckoutForm() {
   const [paymentMethod, setPaymentMethod] = useState<string>('');
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState('');
-  const [discount] = useState(0);
+  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
+  const [discountAmount, setDiscountAmount] = useState(0);
+
   const { data: session } = useSession();
   const { user, fetchUser } = useUsers();
   const { cartItems, totalPrice, totalQuantity } = useCartStore();
+
   useEffect(() => {
     if (session?.user?.id) {
       fetchUser(session.user.id);
     }
   }, [session?.user?.id]);
+
   useEffect(() => {
     if (user?.addressList) {
       setAddresses(user.addressList);
@@ -75,14 +81,15 @@ export default function CheckoutForm() {
       });
     }
   }, [error, toast]);
+
   const handleAddressAdded = () => {
     // Gọi lại fetchUser để lấy danh sách địa chỉ mới nhất
     if (session?.user?.id) {
       fetchUser(session.user.id);
     }
   };
-  useEffect(() => {
 
+  useEffect(() => {
     // Chỉ xử lý nếu currentOrder tồn tại và paymentMethod là CARD hoặc COD
     if (
       currentOrder &&
@@ -104,6 +111,18 @@ export default function CheckoutForm() {
       }
     }
   }, [currentOrder, router, toast]);
+
+  // Hàm xử lý áp dụng coupon từ CouponSelector
+  const handleApplyCoupon = (coupon: Coupon, discount: number) => {
+    setAppliedCoupon(coupon);
+    setDiscountAmount(discount);
+  };
+
+  // Hàm xử lý xóa coupon
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setDiscountAmount(0);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,9 +151,9 @@ export default function CheckoutForm() {
       userId: session?.user?.id || '',
       addressId: selectedAddressId,
       totalAmount: totalQuantity,
-      totalPrice: totalPrice - discount,
+      totalPrice: totalPrice - discountAmount,
       orderDate: new Date(),
-      discount: discount,
+      discount: discountAmount,
       expectedDeliveryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       paymentMethod: paymentMethod,
       orderItemRequests: cartItems.map((item: CartItem) => ({
@@ -196,6 +215,14 @@ export default function CheckoutForm() {
               </RadioGroup>
             </CardContent>
           </Card>
+
+          {/* Sử dụng component CouponSelector đã refactor */}
+          <CouponSelector
+            orderAmount={totalPrice}
+            onApplyCoupon={handleApplyCoupon}
+            onRemoveCoupon={handleRemoveCoupon}
+            appliedCoupon={appliedCoupon}
+          />
         </div>
 
         <div>
@@ -208,14 +235,16 @@ export default function CheckoutForm() {
               <OrderSummary
                 items={cartItems}
                 subtotal={totalPrice}
-                discount={discount}
-                total={totalPrice - discount}
+                discount={discountAmount}
+                total={totalPrice - discountAmount}
               />
             </CardContent>
             <Separator />
             <CardFooter className="pt-6">
               <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
-                {isLoading ? 'Đang xử lý...' : `Đặt Hàng • $${(totalPrice - discount).toFixed(2)}`}
+                {isLoading
+                  ? 'Đang xử lý...'
+                  : `Đặt Hàng • ${(totalPrice - discountAmount).toLocaleString('vi-VN')}đ`}
               </Button>
             </CardFooter>
           </Card>

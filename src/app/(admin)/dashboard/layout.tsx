@@ -99,11 +99,20 @@ const navItems: NavItem[] = [
     permission: 'orders_export', // Quyền xuất hóa đơn
   },
   {
+    title: 'Coupons',
+    href: '/dashboard/coupons',
+    icon: <FileText className="h-5 w-5" />,
+    permission: 'coupons_view', 
+  
+  },
+  {
     title: 'Cài đặt',
     href: '/dashboard/settings',
     icon: <Settings className="h-5 w-5" />,
     permission: 'dashboard_access', // Quyền truy cập dashboard
   },
+  
+  
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
