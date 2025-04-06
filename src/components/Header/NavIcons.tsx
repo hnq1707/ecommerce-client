@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
-import { Bell, LogOut, ShoppingBag, ShoppingCart, SquareUser } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { LogOut, ShoppingBag, ShoppingCart, SquareUser } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import { useCartStore } from '@/lib/redux/features/cart/useCartStore';
 import CartModal from '../CartModal';
@@ -79,79 +80,100 @@ const NavIcons = () => {
   return (
     <div className="flex items-center gap-5 xl:gap-7 relative">
       {/* User Profile */}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full p-0 h-10 w-10"
-            aria-label="User menu"
-          >
-            <Avatar className="h-6 w-6">
-              <AvatarImage
-                src={
-                  status === 'authenticated'
-                    ? user?.imageUrl || '/default-avatar.png'
-                    : '/default-avatar.png'
-                }
-                alt="User avatar"
-              />
-              <AvatarFallback>{user?.lastName?.charAt(0) || 'U'}</AvatarFallback>
-            </Avatar>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-64 p-1">
-          {status === 'authenticated' && session ? (
-            <>
-              <div className="px-3 py-2 text-base font-medium">{user?.lastName || 'User'}</div>
-              <DropdownMenuSeparator />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3, delay: 0.2 }}
+      >
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full p-0 h-10 w-10"
+              aria-label="User menu"
+            >
+              <Avatar className="h-6 w-6">
+                <AvatarImage
+                  src={
+                    status === 'authenticated'
+                      ? user?.imageUrl || '/default-avatar.png'
+                      : '/default-avatar.png'
+                  }
+                  alt="User avatar"
+                />
+                <AvatarFallback>{user?.lastName?.charAt(0) || 'U'}</AvatarFallback>
+              </Avatar>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-64 p-1">
+            {status === 'authenticated' && session ? (
+              <>
+                <div className="px-3 py-2 text-base font-medium">{user?.lastName || 'User'}</div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild className="py-2.5">
+                  <Link
+                    href="/profile"
+                    className="flex items-center gap-3 cursor-pointer text-base"
+                  >
+                    <SquareUser className="h-5 w-5" />
+                    <span>Profile</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="py-2.5">
+                  <Link href="/orders" className="flex items-center gap-3 cursor-pointer text-base">
+                    <ShoppingBag className="h-5 w-5" />
+                    <span>My Orders</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  disabled={isLoading}
+                  className="text-destructive focus:text-destructive py-2.5 text-base"
+                >
+                  {isLoading ? (
+                    <span className="flex items-center gap-3">
+                      <div className="h-5 w-5 rounded-full border-2 border-current border-r-transparent animate-spin" />
+                      Logging out...
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-3">
+                      <LogOut className="h-5 w-5" />
+                      Logout
+                    </span>
+                  )}
+                </DropdownMenuItem>
+              </>
+            ) : (
               <DropdownMenuItem asChild className="py-2.5">
-                <Link href="/profile" className="flex items-center gap-3 cursor-pointer text-base">
-                  <SquareUser className="h-5 w-5" />
-                  <span>Profile</span>
+                <Link href="/login" className="flex items-center gap-3 cursor-pointer text-base">
+                  <LogOut className="h-5 w-5 rotate-180" />
+                  <span>Login</span>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild className="py-2.5">
-                <Link href="/orders" className="flex items-center gap-3 cursor-pointer text-base">
-                  <ShoppingBag className="h-5 w-5" />
-                  <span>My Orders</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={handleLogout}
-                disabled={isLoading}
-                className="text-destructive focus:text-destructive py-2.5 text-base"
-              >
-                {isLoading ? (
-                  <span className="flex items-center gap-3">
-                    <div className="h-5 w-5 rounded-full border-2 border-current border-r-transparent animate-spin" />
-                    Logging out...
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-3">
-                    <LogOut className="h-5 w-5" />
-                    Logout
-                  </span>
-                )}
-              </DropdownMenuItem>
-            </>
-          ) : (
-            <DropdownMenuItem asChild className="py-2.5">
-              <Link href="/login" className="flex items-center gap-3 cursor-pointer text-base">
-                <LogOut className="h-5 w-5 rotate-180" />
-                <span>Login</span>
-              </Link>
-            </DropdownMenuItem>
-          )}
-        </DropdownMenuContent>
-      </DropdownMenu>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </motion.div>
 
       {/* Notifications */}
-      <NotificationBell />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3, delay: 0.3 }}
+      >
+        <NotificationBell />
+      </motion.div>
 
       {/* Shopping Cart */}
-      <div className="relative" ref={cartRef}>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3, delay: 0.4 }}
+        className="relative"
+        ref={cartRef}
+      >
         <Button
           variant="ghost"
           size="icon"
@@ -162,12 +184,14 @@ const NavIcons = () => {
         >
           <ShoppingCart className="h-6 w-6" />
           {totalQuantity > 0 && (
-            <Badge
-              className="absolute -top-1 -right-1 h-6 w-6 p-0 flex items-center justify-center bg-destructive text-base"
-              aria-label={`${totalQuantity} items in cart`}
-            >
-              {totalQuantity}
-            </Badge>
+            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute">
+              <Badge
+                className="absolute -top-1 -right-1 h-6 w-6 p-0 flex items-center justify-center bg-destructive text-base"
+                aria-label={`${totalQuantity} items in cart`}
+              >
+                {totalQuantity}
+              </Badge>
+            </motion.div>
           )}
         </Button>
 
@@ -176,7 +200,7 @@ const NavIcons = () => {
             <CartModal />
           </div>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };

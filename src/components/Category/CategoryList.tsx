@@ -1,18 +1,20 @@
 'use client';
 
 import { useEffect } from 'react';
-import useCategories from '@/lib/redux/features/category/useCategoryStore';
-import Image from 'next/image';
 import Link from 'next/link';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
+import useCategoryStore from '@/lib/redux/features/category/useCategoryStore';
 import { Category } from '@/lib/type/Category';
 
 const CategoryList = () => {
-  const { categories, loading, error, getCategories } = useCategories();
+  const { categories, getCategories, loading } = useCategoryStore();
 
   useEffect(() => {
     getCategories();
   }, []);
 
+  // Image mapping for categories
   const ImageList = [
     {
       id: 1,
@@ -51,36 +53,137 @@ const CategoryList = () => {
     },
   ];
 
-  if (loading) return <p>Loading categories...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading || !categories.length) {
+    return null;
+  }
+
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
+  // Create a grid layout for categories
+  const categoryGroups = [
+    // First row - 2 items
+    categories.slice(0, 2),
+    // Second row - 3 items
+    categories.slice(2, 5),
+    // Third row - 2 items
+    categories.slice(5, 7),
+  ];
 
   return (
-    <div className="px-4 overflow-x-scroll scrollbar-hide">
-      <div className="flex gap-4 md:gap-8">
-        {categories.map((item: Category) => {
-          // Tìm hình ảnh có code trùng với code của category
-          const image = ImageList.find((img) => img.code === item.code);
-          return (
-            <Link
-              href={`/list?categoryId=${item.id}`}
-              className="flex-shrink-0 w-full sm:w-1/2 lg:w-1/4 xl:w-1/6"
-              key={item.id}
-            >
-              <div className="relative bg-slate-100 w-full h-96">
-                <Image
-                  src={image?.url || '/product.jpeg'}
-                  alt={item.name}
-                  fill
-                  sizes="20vw"
-                  className="object-cover"
-                />
-              </div>
-              <h1 className="mt-8 font-light text-xl tracking-wide">{item.name}</h1>
-            </Link>
-          );
-        })}
+    <motion.div
+      variants={container}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.2 }}
+      className="px-4 md:px-8 lg:px-16 xl:px-24 2xl:px-32 overflow-hidden"
+    >
+      <div className="grid gap-6">
+        {/* First row - 2 items */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {categoryGroups[0]?.map((category) => {
+            // Find matching image
+            const image = ImageList.find((img) => img.code === category.code);
+            return (
+              <CategoryCard
+                key={category.id}
+                category={category}
+                variants={item}
+                size="large"
+                imageUrl={image?.url || '/placeholder.svg'}
+              />
+            );
+          })}
+        </div>
+
+        {/* Second row - 3 items */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {categoryGroups[1]?.map((category) => {
+            // Find matching image
+            const image = ImageList.find((img) => img.code === category.code);
+            return (
+              <CategoryCard
+                key={category.id}
+                category={category}
+                variants={item}
+                size="medium"
+                imageUrl={image?.url || '/placeholder.svg'}
+              />
+            );
+          })}
+        </div>
+
+        {/* Third row - 2 items */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {categoryGroups[2]?.map((category) => {
+            // Find matching image
+            const image = ImageList.find((img) => img.code === category.code);
+            return (
+              <CategoryCard
+                key={category.id}
+                category={category}
+                variants={item}
+                size="large"
+                imageUrl={image?.url || '/placeholder.svg'}
+              />
+            );
+          })}
+        </div>
       </div>
-    </div>
+    </motion.div>
+  );
+};
+
+interface CategoryCardProps {
+  category: Category;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  variants: any;
+  size: 'large' | 'medium' | 'small';
+  imageUrl: string;
+}
+
+const CategoryCard = ({ category, variants, size, imageUrl }: CategoryCardProps) => {
+  return (
+    <motion.div
+      variants={variants}
+      whileHover={{ y: -5 }}
+      className="relative overflow-hidden rounded-xl group"
+    >
+      <Link href={`/list?categoryId=${category.id}`} className="block">
+        <div className={`relative ${size === 'large' ? 'aspect-[16/9]' : 'aspect-square'}`}>
+          <Image
+            src={imageUrl || '/placeholder.svg'}
+            alt={category.name}
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-110"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+
+          <div className="absolute inset-0 flex items-center justify-center">
+            <motion.h3
+              className="text-white text-2xl md:text-3xl font-bold text-center px-4"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              {category.name}
+            </motion.h3>
+          </div>
+        </div>
+      </Link>
+    </motion.div>
   );
 };
 

@@ -1,7 +1,10 @@
+'use client';
+
 import Link from 'next/link';
 import Menu from './Menu';
 import SearchBar from './SearchBar';
 import NavIcons from './NavIcons';
+import { motion } from 'framer-motion';
 
 const Navbar = () => {
   const navLinks = [
@@ -17,9 +20,15 @@ const Navbar = () => {
       <div className="max-w-screen-2xl mx-auto h-full">
         {/* MOBILE */}
         <div className="h-full flex items-center justify-between md:hidden">
-          <Link href="/" className="flex items-center">
-            <span className="text-3xl font-semibold tracking-wide">HNQ</span>
-          </Link>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Link href="/" className="flex items-center">
+              <span className="text-3xl font-semibold tracking-wide">HNQ</span>
+            </Link>
+          </motion.div>
           <div className="flex items-center gap-3">
             <SearchBar compact />
             <Menu />
@@ -30,19 +39,31 @@ const Navbar = () => {
         <div className="hidden md:flex items-center justify-between h-full">
           {/* LEFT */}
           <div className="flex items-center gap-16">
-            <Link href="/" className="flex items-center">
-              <span className="text-3xl font-semibold tracking-wide">HNQ</span>
-            </Link>
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Link href="/" className="flex items-center">
+                <span className="text-3xl font-semibold tracking-wide">HNQ</span>
+              </Link>
+            </motion.div>
             <nav className="hidden xl:flex items-center gap-8">
-              {navLinks.map((link) => (
-                <Link
+              {navLinks.map((link, index) => (
+                <motion.div
                   key={link.label}
-                  href={link.href}
-                  className="relative py-1.5 text-base font-medium text-gray-700 hover:text-black transition-colors duration-200 group"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
                 >
-                  {link.label}
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-black transition-all duration-200 group-hover:w-full" />
-                </Link>
+                  <Link
+                    href={link.href}
+                    className="relative py-1.5 text-base font-medium text-gray-700 hover:text-black transition-colors duration-200 group"
+                  >
+                    {link.label}
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-black transition-all duration-200 group-hover:w-full" />
+                  </Link>
+                </motion.div>
               ))}
             </nav>
           </div>

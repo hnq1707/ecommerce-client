@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   AlignJustify,
   X,
@@ -14,7 +15,6 @@ import {
   ShoppingCart,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils/utils';
 
 const Menu = () => {
   const [open, setOpen] = useState(false);
@@ -63,39 +63,55 @@ const Menu = () => {
         {open ? <X className="h-5 w-5" /> : <AlignJustify className="h-5 w-5" />}
       </Button>
 
-      <div
-        className={cn(
-          'fixed inset-0 bg-black/95 text-white z-50 flex flex-col items-center justify-center transition-all duration-300 ease-in-out',
-          open ? 'opacity-100' : 'opacity-0 pointer-events-none',
-        )}
-        aria-hidden={!open}
-        role="dialog"
-        aria-modal="true"
-      >
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setOpen(false)}
-          className="absolute top-5 right-5 text-white hover:bg-white/10 rounded-full"
-          aria-label="Close menu"
-        >
-          <X className="h-6 w-6" />
-        </Button>
-
-        <nav className="flex flex-col items-center justify-center gap-6 text-xl">
-          {menuItems.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 bg-black/95 text-white z-50 flex flex-col items-center justify-center"
+            aria-hidden={!open}
+            role="dialog"
+            aria-modal="true"
+          >
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 py-2 px-4 rounded-md hover:bg-white/10 transition-colors duration-200"
+              className="absolute top-5 right-5 text-white hover:bg-white/10 rounded-full"
+              aria-label="Close menu"
             >
-              <item.icon className="h-5 w-5" />
-              <span>{item.label}</span>
-            </Link>
-          ))}
-        </nav>
-      </div>
+              <X className="h-6 w-6" />
+            </Button>
+
+            <motion.nav
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+              className="flex flex-col items-center justify-center gap-6 text-xl"
+            >
+              {menuItems.map((item, index) => (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.1 + index * 0.05 }}
+                >
+                  <Link
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-3 py-2 px-4 rounded-md hover:bg-white/10 transition-colors duration-200"
+                  >
+                    <item.icon className="h-5 w-5" />
+                    <span>{item.label}</span>
+                  </Link>
+                </motion.div>
+              ))}
+            </motion.nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
