@@ -8,6 +8,7 @@ import { Button } from '../ui/button';
 import { Product } from '@/lib/type/Product';
 import { Minus, Plus, ShoppingCart, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 interface AddProps {
   product: Product;
@@ -20,7 +21,7 @@ const Add = ({ product, variant, stockQuantity }: AddProps) => {
   const [isAdding, setIsAdding] = useState(false);
   const { addItem } = useCartStore();
   const { toast } = useToast();
-
+  const router = useRouter();
   const handleQuantity = (type: 'i' | 'd') => {
     setQuantity((prev) => {
       if (type === 'd' && prev > 1) return prev - 1;
@@ -66,6 +67,7 @@ const Add = ({ product, variant, stockQuantity }: AddProps) => {
       });
 
       setIsAdding(false);
+      router.push('/checkout');
     }, 500);
   };
 
@@ -77,9 +79,7 @@ const Add = ({ product, variant, stockQuantity }: AddProps) => {
       <div className="flex items-center justify-between">
         <h4 className="font-medium">Choose a Quantity</h4>
         {stockQuantity !== undefined && stockQuantity > 0 && (
-          <span className="text-sm text-gray-500">
-            {stockQuantity} {stockQuantity === 1 ? 'item' : 'items'} available
-          </span>
+          <span className="text-sm text-gray-500">{stockQuantity} sản phẩm còn lại</span>
         )}
       </div>
 
@@ -123,22 +123,22 @@ const Add = ({ product, variant, stockQuantity }: AddProps) => {
           ) : (
             <>
               <ShoppingCart className="h-5 w-5 mr-2" />
-              {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+              {isOutOfStock ? 'Hết hàng' : 'Mua ngay'}
             </>
           )}
         </Button>
       </div>
 
       {!isVariantSelected && !isOutOfStock && (
-        <p className="text-amber-600 text-sm">Please select color and size first</p>
+        <p className="text-amber-600 text-sm">Vui lòng chọn màu sắc và kích thước sản phẩm</p>
       )}
 
-      {/* {isOutOfStock && (
+      {isOutOfStock && (
         <div className="bg-red-50 text-red-700 p-3 rounded-lg text-sm">
           This product is currently out of stock. Please check back later or browse similar
           products.
         </div>
-      )} */}
+      )}
     </div>
   );
 };

@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Bell } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { useNotifications } from '@/hooks/use-notification'; // Giả sử hook này trả về notifications từ backend
 import type { Notification as AppNotification } from '@/lib/type/Notification';
@@ -37,15 +36,6 @@ export default function ToastNotification({
     toast({
       title: notification.title,
       description: notification.message,
-      action: notification.link
-        ? {
-            label: 'Xem',
-            onClick: () => {
-              window.location.href = notification.link || '';
-            },
-          }
-        : undefined,
-      icon: <Bell className="h-5 w-5" />,
       duration: autoClose ? autoCloseDelay : Number.POSITIVE_INFINITY,
     });
   };

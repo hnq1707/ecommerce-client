@@ -117,13 +117,13 @@ const NavIcons = () => {
                     className="flex items-center gap-3 cursor-pointer text-base"
                   >
                     <SquareUser className="h-5 w-5" />
-                    <span>Profile</span>
+                    <span>Thông tin cá nhân</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild className="py-2.5">
                   <Link href="/orders" className="flex items-center gap-3 cursor-pointer text-base">
                     <ShoppingBag className="h-5 w-5" />
-                    <span>My Orders</span>
+                    <span>Danh sách đơn hàng</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -140,7 +140,7 @@ const NavIcons = () => {
                   ) : (
                     <span className="flex items-center gap-3">
                       <LogOut className="h-5 w-5" />
-                      Logout
+                      Đăng xuất
                     </span>
                   )}
                 </DropdownMenuItem>
@@ -184,10 +184,14 @@ const NavIcons = () => {
         >
           <ShoppingCart className="h-6 w-6" />
           {totalQuantity > 0 && (
-            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="absolute top-0 right-0 translate-x-1/3 -translate-y-1/3"
+            >
               <Badge
-                className="absolute -top-1 -right-1 h-6 w-6 p-0 flex items-center justify-center bg-destructive text-base"
-                aria-label={`${totalQuantity} items in cart`}
+                className="h-5 w-5 p-0 flex items-center justify-center bg-destructive text-destructive-foreground text-xs font-medium rounded-full"
+                aria-label={`${totalQuantity} sản phẩm trong giỏ`}
               >
                 {totalQuantity}
               </Badge>

@@ -142,8 +142,9 @@ export const cancelOrder = createAsyncThunk(
   'order/cancelOrder',
   async (orderId: string, { rejectWithValue }) => {
     try {
-      await api.post(`/api/order/cancel/${orderId}`);
-      return orderId;
+      const response = await api.post(`/api/order/cancel/${orderId}`);
+      console.log(response);
+      return response.data.result;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Không thể hủy đơn hàng');
     }

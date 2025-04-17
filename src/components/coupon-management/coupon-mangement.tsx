@@ -8,6 +8,7 @@ import { CouponForm } from './coupon-form';
 import { CouponStats } from './coupon-stats';
 import { getCoupons, deleteCoupon, toggleCouponStatus } from '@/lib/utils/coupon-service';
 import type { Coupon } from '@/lib/utils/coupon-service';
+import PermissionGuard from '@/components/auth/permission-guard';
 
 export function CouponManagement() {
   const { toast } = useToast();
@@ -63,10 +64,12 @@ export function CouponManagement() {
   const handleToggleStatus = async (id: number, isActive: boolean) => {
     try {
       await toggleCouponStatus(id, !isActive);
-      setCoupons(coupons.map((coupon) => (coupon.id === id ? { ...coupon, isActive } : coupon)));
+      setCoupons(
+        coupons.map((coupon) => (coupon.id === id ? { ...coupon, isActive: !isActive } : coupon)),
+      );
       toast({
         title: 'Thành công',
-        description: `Đã ${isActive ? 'kích hoạt' : 'vô hiệu hóa'} mã giảm giá`,
+        description: `Đã ${!isActive ? 'kích hoạt' : 'vô hiệu hóa'} mã giảm giá`,
       });
     } catch (error) {
       console.error('Error toggling coupon status:', error);
@@ -100,38 +103,57 @@ export function CouponManagement() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
+        {/* Sử dụng PermissionGuard để hiển thị các tab theo quyền */}
         <TabsList className="grid w-full md:w-auto grid-cols-3">
-          <TabsTrigger value="list">Danh sách</TabsTrigger>
-          <TabsTrigger value="create">Tạo mới</TabsTrigger>
-          <TabsTrigger value="stats">Thống kê</TabsTrigger>
+          <PermissionGuard permission="coupons_view">
+            <TabsTrigger value="list">Danh sách</TabsTrigger>
+          </PermissionGuard>
+          <PermissionGuard permission="coupons_create">
+            <TabsTrigger value="create">Tạo mới</TabsTrigger>
+          </PermissionGuard>
+          <PermissionGuard permission="coupons_view">
+            <TabsTrigger value="stats">Thống kê</TabsTrigger>
+          </PermissionGuard>
         </TabsList>
 
-        <TabsContent value="list" className="space-y-4">
-          <CouponList
-            coupons={coupons}
-            isLoading={isLoading}
-            onEdit={handleEditCoupon}
-            onDelete={handleDeleteCoupon}
-            onToggleStatus={handleToggleStatus}
-            onRefresh={loadCoupons}
-          />
-        </TabsContent>
+        {/* Nội dung danh sách */}
+        <PermissionGuard permission="coupons_view">
+          <TabsContent value="list" className="space-y-4">
+            <CouponList
+              coupons={coupons}
+              isLoading={isLoading}
+              onEdit={handleEditCoupon}
+              onDelete={handleDeleteCoupon}
+              onToggleStatus={handleToggleStatus}
+              onRefresh={loadCoupons}
+            />
+          </TabsContent>
+        </PermissionGuard>
 
-        <TabsContent value="create">
-          <CouponForm onSave={handleCouponSaved} onCancel={handleCancelEdit} />
-        </TabsContent>
+        {/* Nội dung tạo mới */}
+        <PermissionGuard permission="coupons_create">
+          <TabsContent value="create">
+            <CouponForm onSave={handleCouponSaved} onCancel={handleCancelEdit} />
+          </TabsContent>
+        </PermissionGuard>
 
-        <TabsContent value="edit">
-          <CouponForm
-            coupon={selectedCoupon}
-            onSave={handleCouponSaved}
-            onCancel={handleCancelEdit}
-          />
-        </TabsContent>
+        {/* Nội dung chỉnh sửa - chỉ hiển thị nếu có quyền chỉnh sửa */}
+        <PermissionGuard permission="coupons_edit">
+          <TabsContent value="edit">
+            <CouponForm
+              coupon={selectedCoupon}
+              onSave={handleCouponSaved}
+              onCancel={handleCancelEdit}
+            />
+          </TabsContent>
+        </PermissionGuard>
 
-        <TabsContent value="stats">
-          <CouponStats coupons={coupons} />
-        </TabsContent>
+        {/* Nội dung thống kê */}
+        <PermissionGuard permission="coupons_view">
+          <TabsContent value="stats">
+            <CouponStats coupons={coupons} />
+          </TabsContent>
+        </PermissionGuard>
       </Tabs>
     </div>
   );

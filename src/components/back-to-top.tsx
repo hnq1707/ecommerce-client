@@ -1,39 +1,26 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils/utils';
 
-interface BackToTopProps {
-  showAfter?: number; // Scroll position in pixels when button appears
-  className?: string;
-}
-
-const BackToTop = ({ showAfter = 300, className }: BackToTopProps) => {
+const BackToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
 
-  // Handle scroll event to show/hide button
   useEffect(() => {
     const toggleVisibility = () => {
-      if (window.scrollY > showAfter) {
+      if (window.scrollY > 500) {
         setIsVisible(true);
       } else {
         setIsVisible(false);
       }
     };
 
-    // Initial check
-    toggleVisibility();
-
-    // Add scroll event listener
     window.addEventListener('scroll', toggleVisibility);
-
-    // Clean up
     return () => window.removeEventListener('scroll', toggleVisibility);
-  }, [showAfter]);
+  }, [300]);
 
-  // Scroll to top function
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -42,19 +29,25 @@ const BackToTop = ({ showAfter = 300, className }: BackToTopProps) => {
   };
 
   return (
-    <Button
-      variant="secondary"
-      size="icon"
-      className={cn(
-        'fixed bottom-6 right-6 z-50 rounded-full shadow-md transition-all duration-300 bg-primary text-white hover:bg-primary/90',
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none',
-        className,
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.5 }}
+          transition={{ duration: 0.3 }}
+          className="fixed bottom-6 right-6 z-50"
+        >
+          <Button
+            onClick={scrollToTop}
+            size="icon"
+            className="h-12 w-12 rounded-full shadow-lg bg-primary hover:bg-primary/90"
+          >
+            <ChevronUp className="h-6 w-6" />
+          </Button>
+        </motion.div>
       )}
-      onClick={scrollToTop}
-      aria-label="Back to top"
-    >
-      <ChevronUp className="h-5 w-5" />
-    </Button>
+    </AnimatePresence>
   );
 };
 

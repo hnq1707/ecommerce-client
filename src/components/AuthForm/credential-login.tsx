@@ -1,3 +1,7 @@
+'use client';
+
+import type React from 'react';
+
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
@@ -7,12 +11,49 @@ import Link from 'next/link';
 
 export default function CredentialLogin() {
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({
+    email: '',
+    password: '',
+  });
+
+  const validateForm = (email: string, password: string) => {
+    let isValid = true;
+    const newErrors = {
+      email: '',
+      password: '',
+    };
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.trim()) {
+      newErrors.email = 'Email is required';
+      isValid = false;
+    } else if (!emailRegex.test(email)) {
+      newErrors.email = 'Please enter a valid email address';
+      isValid = false;
+    }
+
+    // Password validation
+    if (!password) {
+      newErrors.password = 'Password is required';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const email = (form.elements.namedItem('email') as HTMLInputElement).value;
     const password = (form.elements.namedItem('password') as HTMLInputElement).value;
+
+    // Validate form before submission
+    if (!validateForm(email, password)) {
+      return;
+    }
+
     setLoading(true);
     try {
       const result = await login2('credentials', {
@@ -45,6 +86,7 @@ export default function CredentialLogin() {
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input id="email" type="email" placeholder="m@example.com" autoComplete="email" />
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
           </div>
           <div className="grid gap-2">
             <div className="flex items-center">
@@ -54,6 +96,7 @@ export default function CredentialLogin() {
               </a>
             </div>
             <Input id="password" type="password" />
+            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
           </div>
           <Button type="submit" className="w-full" disabled={loading}>
             {loading ? (

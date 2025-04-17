@@ -5,14 +5,15 @@ import Menu from './Menu';
 import SearchBar from './SearchBar';
 import NavIcons from './NavIcons';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 const Navbar = () => {
   const navLinks = [
-    { href: '/', label: 'Home' },
-    { href: '/list', label: 'Shop' },
-    { href: '/deals', label: 'Deals' },
-    { href: '/about', label: 'About' },
-    { href: '/contact', label: 'Contact' },
+    { href: '/', label: 'Trang chủ' },
+    { href: '/list', label: 'Khám phá ' },
+    { href: '/deals', label: 'Khuyến mãi' },
+    { href: '/about', label: 'Về chúng tôi' },
+    { href: '/contact', label: 'Liên hệ' },
   ];
 
   return (
@@ -45,7 +46,8 @@ const Navbar = () => {
               transition={{ duration: 0.3 }}
             >
               <Link href="/" className="flex items-center">
-                <span className="text-3xl font-semibold tracking-wide">HNQ</span>
+                {/* <span className="text-3xl font-semibold tracking-wide">HNQ</span> */}
+                <Image src="/logo.png" alt={''} width={90} height={90} />
               </Link>
             </motion.div>
             <nav className="hidden xl:flex items-center gap-8">

@@ -63,6 +63,11 @@ const allPermissions = [
   { name: 'roles_create', description: 'Thêm vai trò', group: 'Phân quyền' },
   { name: 'roles_edit', description: 'Sửa vai trò', group: 'Phân quyền' },
   { name: 'roles_delete', description: 'Xóa vai trò', group: 'Phân quyền' },
+
+  { name: 'coupons_view', description: 'Xem coupons', group: 'Coupons' },
+  { name: 'coupons_create', description: 'Thêm coupons', group: 'Coupons' },
+  { name: 'coupons_edit', description: 'Sửa coupons', group: 'Coupons' },
+  { name: 'coupons_delete', description: 'Xóa coupons', group: 'Coupons' },
 ];
 
 // Nhóm các quyền theo group

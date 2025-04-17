@@ -41,12 +41,12 @@ const Menu = () => {
   }, [open]);
 
   const menuItems = [
-    { href: '/', label: 'Homepage', icon: Home },
-    { href: '/list', label: 'Shop', icon: ShoppingBag },
-    { href: '/deals', label: 'Deals', icon: Tag },
-    { href: '/about', label: 'About', icon: Info },
-    { href: '/contact', label: 'Contact', icon: Mail },
-    { href: '/logout', label: 'Logout', icon: LogOut },
+    { href: '/', label: 'Trang chủ', icon: Home },
+    { href: '/list', label: 'Khám phá ', icon: ShoppingBag },
+    { href: '/deals', label: 'Khuyến mãi', icon: Tag },
+    { href: '/about', label: 'Về chúng tôi', icon: Info },
+    { href: '/contact', label: 'Liên hệ', icon: Mail },
+    { href: '/logout', label: 'Đăng xuất', icon: LogOut },
     { href: '/cart', label: 'Cart(1)', icon: ShoppingCart },
   ];
 

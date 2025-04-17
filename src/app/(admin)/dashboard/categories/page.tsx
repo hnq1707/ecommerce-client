@@ -991,7 +991,7 @@ function CategoriesContent() {
                 currentCategory.name.length < 3 ||
                 currentCategory.code.length < 3 ||
                 currentCategory.categoryTypes?.some(
-                  (type) =>
+                  (type : CategoryType) =>
                     !type.name || !type.code || type.name.length < 2 || type.code.length < 2,
                 )
               }

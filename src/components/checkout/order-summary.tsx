@@ -10,12 +10,17 @@ interface OrderSummaryProps {
 }
 
 export function OrderSummary({ items, subtotal, discount, total }: OrderSummaryProps) {
+  const formatCurrency = (amount: number) => {
+    amount = amount * 23000;
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(amount);
+  };
   return (
     <div className="space-y-4">
       <div className="space-y-4">
         {items.map((item) => {
-          // Kiểm tra resources có tồn tại không và có phải mảng không
-          
           return (
             <div key={item.id} className="flex items-start gap-4">
               <div className="relative h-20 w-20 overflow-hidden rounded-md border">
@@ -31,10 +36,10 @@ export function OrderSummary({ items, subtotal, discount, total }: OrderSummaryP
                 <p className="text-sm text-muted-foreground">SL: {item.quantity}</p>
               </div>
               <div className="text-right">
-                <p className="font-medium">${item.price.toFixed(2)}</p>
+                <p className="font-medium">{formatCurrency(item.price)}</p>
                 {item.quantity > 1 && (
                   <p className="text-sm text-muted-foreground">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    {formatCurrency(item.price * item.quantity)}
                   </p>
                 )}
               </div>
@@ -48,11 +53,11 @@ export function OrderSummary({ items, subtotal, discount, total }: OrderSummaryP
       <div className="space-y-2">
         <div className="flex justify-between">
           <p className="text-muted-foreground">Tạm tính</p>
-          <p className="font-medium">${subtotal.toFixed(2)}</p>
+          <p className="font-medium">{formatCurrency(subtotal)}</p>
         </div>
         <div className="flex justify-between">
           <p className="text-muted-foreground">Giảm giá</p>
-          <p className="font-medium text-green-600">-${discount.toFixed(2)}</p>
+          <p className="font-medium text-green-600">-{formatCurrency(discount)}</p>
         </div>
         <div className="flex justify-between">
           <p className="text-muted-foreground">Phí vận chuyển</p>
@@ -61,7 +66,7 @@ export function OrderSummary({ items, subtotal, discount, total }: OrderSummaryP
         <Separator />
         <div className="flex justify-between font-medium">
           <p>Tổng cộng</p>
-          <p>${total.toFixed(2)}</p>
+          <p>${formatCurrency(total)}</p>
         </div>
       </div>
     </div>

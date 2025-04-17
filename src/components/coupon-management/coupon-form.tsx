@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
-import { vi } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -289,7 +288,7 @@ export function CouponForm({ coupon, onSave, onCancel }: CouponFormProps) {
                                 className="w-full pl-3 text-left font-normal"
                               >
                                 {field.value ? (
-                                  format(field.value, 'dd/MM/yyyy', { locale: vi })
+                                  format(field.value, 'dd/MM/yyyy')
                                 ) : (
                                   <span>Chọn ngày</span>
                                 )}
@@ -325,7 +324,7 @@ export function CouponForm({ coupon, onSave, onCancel }: CouponFormProps) {
                                 className="w-full pl-3 text-left font-normal"
                               >
                                 {field.value ? (
-                                  format(field.value, 'dd/MM/yyyy', { locale: vi })
+                                  format(field.value, 'dd/MM/yyyy')
                                 ) : (
                                   <span>Chọn ngày</span>
                                 )}
