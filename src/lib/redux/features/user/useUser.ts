@@ -5,10 +5,11 @@ import {
   fetchUsers,
   fetchUserById,
   updateUser,
-  deleteUser,
   setUser,
   clearUser,
   UpdateUserRequest,
+  toggleStatus,
+  
 } from '@/lib/redux/features/user/userSlice';
 import { User } from '@/lib/type/User';
 
@@ -34,9 +35,9 @@ export const useUsers = () => {
     [dispatch],
   );
 
-  const removeUser = useCallback(
+  const toggleUserStatus = useCallback(
     (userId: string) => {
-      dispatch(deleteUser(userId));
+      dispatch(toggleStatus(userId));
     },
     [dispatch],
   );
@@ -62,7 +63,7 @@ export const useUsers = () => {
       fetchAllUsers,
       fetchUser,
       updateUserData,
-      removeUser,
+      toggleUserStatus,
       setUserState,
       clearUserState,
     }),
@@ -74,7 +75,7 @@ export const useUsers = () => {
       fetchAllUsers,
       fetchUser,
       updateUserData,
-      removeUser,
+      toggleUserStatus,
       setUserState,
       clearUserState,
     ],

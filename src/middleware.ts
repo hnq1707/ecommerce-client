@@ -10,7 +10,6 @@ export async function middleware(req: NextRequest) {
   const isAuthPage: boolean =
     req.nextUrl.pathname.startsWith('/login') || req.nextUrl.pathname.startsWith('/register');
   const isDashboardPage: boolean = req.nextUrl.pathname.startsWith('/dashboard');
-
   // Giải mã accessToken để lấy trường scope
   const user = session?.user;
   let scope: string = '';
@@ -29,7 +28,7 @@ export async function middleware(req: NextRequest) {
   // Xác định quyền truy cập dashboard dựa trên scope
   // Ví dụ: chỉ cho phép nếu scope chứa 'admin' hoặc 'manager'
   const canAccessDashboard: boolean = scope.includes('ADMIN') || scope.includes('MANAGER');
-  
+
   // Nếu user đã xác thực và đang cố truy cập các trang auth (login, register)
   if (isAuth && isAuthPage) {
     return NextResponse.redirect(new URL('/', req.url));
@@ -53,5 +52,13 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/login', '/register', '/profile', '/orders/:path*'],
+  matcher: [
+    '/dashboard/:path*',
+    '/login',
+    '/register',
+    '/profile',
+    '/orders/:path*',
+    '/checkout/:path*',
+    '/checkout',
+  ],
 };

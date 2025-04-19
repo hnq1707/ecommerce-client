@@ -5,10 +5,13 @@ import {
   fetchRoles,
   updateRole,
   deleteRole,
- 
+  assignRoleToUser,
+  removeRoleFromUser,
 } from '@/lib/redux/features/roles/roleSlice';
 import { useCallback } from 'react';
 import { Role } from '@/lib/type/Role';
+import { AssignRoleRequest } from '@/lib/type/AssignRoleRequest';
+import { RemoveRoleRequest } from '@/lib/type/RemoveRoleRequest';
 
 export const useRoles = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -43,6 +46,22 @@ export const useRoles = () => {
     [dispatch],
   );
 
+  // Gán vai trò cho người dùng
+  const assignRole = useCallback(
+    async (request: AssignRoleRequest) => {
+      await dispatch(assignRoleToUser(request));
+    },
+    [dispatch],
+  );
+
+  // Xóa vai trò khỏi người dùng
+  const unassignRole = useCallback(
+    async (request: RemoveRoleRequest) => {
+      await dispatch(removeRoleFromUser(request));
+    },
+    [dispatch],
+  );
+
   return {
     roles,
     loading,
@@ -51,6 +70,8 @@ export const useRoles = () => {
     loadRoles,
     modifyRole,
     removeRole,
+    assignRole,
+    unassignRole,
   };
 };
 

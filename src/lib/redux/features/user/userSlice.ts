@@ -51,12 +51,11 @@ export const updateUser = createAsyncThunk(
 );
 
 // Delete user
-export const deleteUser = createAsyncThunk(
-  'users/deleteUser',
+export const toggleStatus = createAsyncThunk(
+  'users/toggleStatus',
   async (userId: string, { rejectWithValue }) => {
     try {
-      await api.delete(`${API_BASE_URL}/${userId}`);
-      return userId;
+      await api.put(`${API_BASE_URL}/toggle-status/${userId}`);
     } catch (error: any) {
       return rejectWithValue(error.response?.data || error.message);
     }
@@ -124,15 +123,14 @@ const userSlice = createSlice({
       })
 
       // Delete User
-      .addCase(deleteUser.pending, (state) => {
+      .addCase(toggleStatus.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteUser.fulfilled, (state, action) => {
+      .addCase(toggleStatus.fulfilled, (state) => {
         state.loading = false;
-        state.users = state.users.filter((user) => user.id !== action.payload);
       })
-      .addCase(deleteUser.rejected, (state, action) => {
+      .addCase(toggleStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

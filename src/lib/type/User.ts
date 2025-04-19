@@ -9,6 +9,7 @@ export type User = {
   imageUrl: string;
   phoneNumber: string;
   email: string;
+  enabled: boolean;
   roles: Role[];
   addressList: Address[];
 };

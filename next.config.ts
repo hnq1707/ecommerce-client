@@ -28,6 +28,18 @@ const nextConfig = {
       },
     ],
   },
+  experimental: {
+    optimizeCss: true,
+    scrollRestoration: true,
+  },
+  // Tối ưu memory usage
+  onDemandEntries: {
+    // Thời gian trang được lưu trong bộ nhớ (ms)
+    maxInactiveAge: 15 * 1000,
+    // Số lượng trang tối đa được lưu trong bộ nhớ
+    pagesBufferLength: 2,
+  },
+
 };
 
 module.exports = nextConfig;

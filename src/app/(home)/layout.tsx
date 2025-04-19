@@ -1,10 +1,11 @@
 'use client';
 
-import Navbar from '@/components/Header';
-import Footer from '@/components/Footer';
 import BackToTop from '@/components/back-to-top';
 import { Toaster } from '@/components/ui/toaster';
 import ToastNotification from '@/components/notification/toast-notification';
+import dynamic from 'next/dynamic';
+const Navbar = dynamic(() => import('@/components/Header'), { ssr: true });
+const Footer = dynamic(() => import('@/components/Footer'), { ssr: false });
 
 export default function HomeLayout({
   children,
@@ -22,3 +23,4 @@ export default function HomeLayout({
     </div>
   );
 }
+

@@ -28,7 +28,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const user = json.result;
         const decoded = decodeJwt<{ scope?: string }>(user.accessToken);
 
-        console.log(user);
         if (res.ok && user)
           return {
             id: user.id,
@@ -73,7 +72,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             });
             const createData = await createResponse.json();
 
-            console.log('createData:', createData);
             user.id = createData.result.id;
             user.accessToken = createData.result.accessToken;
           }

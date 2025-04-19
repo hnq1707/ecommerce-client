@@ -85,6 +85,13 @@ const ProfilePage = () => {
       fetchUser(session.user.id);
     }
   };
+  const formatCurrency = (amount: number) => {
+    amount = amount * 23000;
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(amount);
+  };
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -644,7 +651,7 @@ const ProfilePage = () => {
 
                                 <div className="flex justify-between items-center pt-2">
                                   <div className="font-medium">
-                                    ${(order.totalAmount || 0).toFixed(2)}
+                                    {formatCurrency(order.totalPrice || 0)}
                                   </div>
                                   <div className="text-primary flex items-center text-sm font-medium group-hover:underline">
                                     Xem chi tiết

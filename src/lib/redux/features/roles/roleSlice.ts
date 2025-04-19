@@ -2,6 +2,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import api from '@/lib/utils/api';
 import { Role } from '@/lib/type/Role';
+import { AssignRoleRequest } from '@/lib/type/AssignRoleRequest';
+import { RemoveRoleRequest } from '@/lib/type/RemoveRoleRequest';
 
 // Định nghĩa kiểu dữ liệu cho Permission
 
@@ -46,6 +48,33 @@ export const updateRole = createAsyncThunk(
     try {
       const response = await api.put(`/roles/${roleName}`, roleData);
       return response.data.result as Role;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  },
+);
+// Thunk: Gán vai trò cho người dùng
+export const assignRoleToUser = createAsyncThunk(
+  'roles/assignRoleToUser',
+  async (request: AssignRoleRequest, { rejectWithValue }) => {
+    try {
+      const response = await api.post('/roles/assign', request);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  },
+);
+
+// Thunk: Xóa vai trò khỏi người dùng
+export const removeRoleFromUser = createAsyncThunk(
+  'roles/removeRoleFromUser',
+  async (request: RemoveRoleRequest, { rejectWithValue }) => {
+    try {
+      const response = await api.delete('/roles/remove', {
+        data: request,
+      });
+      return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || error.message);
     }
@@ -126,6 +155,33 @@ const rolesSlice = createSlice({
         );
       })
       .addCase(updateRole.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      .addCase(assignRoleToUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(assignRoleToUser.fulfilled, (state) => {
+        state.loading = false;
+        // Không cần thay đổi state.roles vì chỉ cập nhật mối quan hệ
+      })
+      .addCase(assignRoleToUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // Remove Role from User
+      .addCase(removeRoleFromUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(removeRoleFromUser.fulfilled, (state) => {
+        state.loading = false;
+        // Không cần thay đổi state.roles vì chỉ cập nhật mối quan hệ
+      })
+      .addCase(removeRoleFromUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

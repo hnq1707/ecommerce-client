@@ -9,8 +9,12 @@ import { useCartStore } from '@/lib/redux/features/cart/useCartStore';
 import { Button } from '@/components/ui/button';
 import type { CartItem } from '@/lib/type/CartItem';
 
-const CartModal = () => {
-  const { cartItems, removeItem, changeQuantity } = useCartStore();
+interface CartModalProps {
+  onClose?: () => void;
+}
+
+const CartModal = ({ onClose }: CartModalProps) => {
+  const { cartItems, removeItem, changeQuantity , clear} = useCartStore();
   const [isRemoving, setIsRemoving] = useState<string | null>(null);
 
   const handleRemove = (id: string) => {
@@ -41,7 +45,7 @@ const CartModal = () => {
     <div className="w-[350px] md:w-[400px] bg-white rounded-lg shadow-xl overflow-hidden border">
       <div className="p-4 border-b flex justify-between items-center">
         <h3 className="font-medium">Giỏ hàng ({cartItems.length})</h3>
-        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+        <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={onClose}>
           <X className="h-4 w-4" />
         </Button>
       </div>
@@ -118,8 +122,8 @@ const CartModal = () => {
           <span className="font-bold text-primary">{formatCurrency(totalPrice)}</span>
         </div>
         <div className="grid grid-cols-2 gap-2">
-          <Button asChild variant="outline" className="w-full">
-            <Link href="/cart">Xoa gio hang</Link>
+          <Button asChild variant="outline" className="w-full cursor-pointer" onClick={clear}>
+            <span>Xóa giỏ hàng</span>
           </Button>
           <Button asChild className="w-full">
             <Link href="/checkout">Thanh toán</Link>
