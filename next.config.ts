@@ -31,15 +31,22 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
     scrollRestoration: true,
+    // Thêm tối ưu hóa
+    optimizeServerReact: true,
+    serverMinification: true,
   },
   // Tối ưu memory usage
   onDemandEntries: {
-    // Thời gian trang được lưu trong bộ nhớ (ms)
-    maxInactiveAge: 15 * 1000,
-    // Số lượng trang tối đa được lưu trong bộ nhớ
-    pagesBufferLength: 2,
+    // Giảm thời gian lưu trang trong bộ nhớ (ms)
+    maxInactiveAge: 10 * 1000,
+    // Giảm số lượng trang tối đa lưu trong bộ nhớ
+    pagesBufferLength: 1,
   },
-
+  // Tắt các tính năng không cần thiết
+  reactStrictMode: true,
+  poweredByHeader: false,
+  compress: true,
 };
+
 
 module.exports = nextConfig;

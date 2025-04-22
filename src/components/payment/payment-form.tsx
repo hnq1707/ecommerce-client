@@ -13,7 +13,6 @@ import {
   selectOrderDetails,
   selectOrderLoading,
 } from "@/lib/redux/features/order/orderSlice"
-import App from "next/app"
 import { AppDispatch } from "@/lib/redux/store"
 
 // Đảm bảo gọi loadStripe bên ngoài render của component để tránh
@@ -31,7 +30,6 @@ export function PaymentForm({ orderId }: PaymentFormProps) {
 
   // Redux state
   const isLoading = useSelector(selectOrderLoading)
-  const orderDetails = useSelector(selectOrderDetails)
 
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [orderTotal, setOrderTotal] = useState(0)
