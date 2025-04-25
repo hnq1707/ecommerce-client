@@ -1,7 +1,7 @@
 'use client';
 
 import useCategoryStore from '@/lib/redux/features/category/useCategoryStore';
-import type { CategoryType } from '@/lib/type/Category';
+import type { CategoryType } from '@/lib/types/Category';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';

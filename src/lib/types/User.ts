@@ -1,7 +1,7 @@
 import { Role } from './Role';
 import { Address } from './Address';
 
-// Define User type
+// Define User types
 export type User = {
   id: string;
   firstName: string;

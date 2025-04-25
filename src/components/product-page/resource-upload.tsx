@@ -9,7 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import Image from 'next/image';
 import { useToast } from '@/components/ui/use-toast';
-import type { Resource } from '@/lib/type/Resource';
+import type { Resource } from '@/lib/types/Resource';
 
 interface ResourceUploaderProps {
   resources: Resource[];

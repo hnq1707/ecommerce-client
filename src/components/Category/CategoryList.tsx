@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import useCategoryStore from '@/lib/redux/features/category/useCategoryStore';
-import { Category } from '@/lib/type/Category';
+import { Category } from '@/lib/types/Category';
 
 const CategoryList = () => {
   const { categories, getCategories, loading } = useCategoryStore();
@@ -167,6 +167,7 @@ const CategoryCard = ({ category, variants, size, imageUrl }: CategoryCardProps)
             src={imageUrl || '/placeholder.svg'}
             alt={category.name}
             fill
+            loading="lazy"
             className="object-cover transition-transform duration-700 group-hover:scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />

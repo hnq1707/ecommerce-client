@@ -2,7 +2,7 @@
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { MapPin, Plus, Edit, Trash2 } from 'lucide-react';
-import type { Address } from '@/lib/type/Address';
+import type { Address } from '@/lib/types/Address';
 import { Button } from '@/components/ui/button';
 import { AddAddressDialog } from './AddAddressDialog';
 import { useState } from 'react';

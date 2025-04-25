@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, clearCart, removeFromCart, updateQuantity } from './cartSlice';
 import { RootState } from '../../store';
-import { CartItem } from '@/lib/type/CartItem';
+import { CartItem } from '@/lib/types/CartItem';
 
 export const useCartStore = () => {
   const dispatch = useDispatch();

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { User } from '@/lib/type/User';
+import { User } from '@/lib/types/User';
 import api from '@/lib/utils/api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 const API_BASE_URL = '/users';

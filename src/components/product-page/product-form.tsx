@@ -12,8 +12,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { SlidersHorizontal } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import type { Product } from '@/lib/type/Product';
-import { CategoryType } from '@/lib/type/Category';
+import type { Product } from '@/lib/types/Product';
+import { CategoryType } from '@/lib/types/Category';
 
 interface Category {
   id: string;

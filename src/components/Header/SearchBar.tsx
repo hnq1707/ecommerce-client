@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useDebounce } from '@/hooks/use-debounce';
-import { Product } from '@/lib/type/Product';
+import { Product } from '@/lib/types/Product';
 
 interface SearchBarProps {
   compact?: boolean;

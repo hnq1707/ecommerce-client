@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Add from './Add';
-import type { Product } from '@/lib/type/Product';
-import type { ProductVariant } from '@/lib/type/ProductVariant';
+import type { Product } from '@/lib/types/Product';
+import type { ProductVariant } from '@/lib/types/ProductVariant';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';

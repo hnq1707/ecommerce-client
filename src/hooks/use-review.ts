@@ -10,7 +10,7 @@ import {
   canUserReviewProduct,
   
 } from '@/lib/utils/review-service';
-import type { Review, ReviewStats } from '@/lib/type/Review';
+import type { Review, ReviewStats } from '@/lib/types/Review';
 
 interface UseReviewsProps {
   productId: string;

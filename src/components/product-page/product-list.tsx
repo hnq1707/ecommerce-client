@@ -20,7 +20,7 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import Image from 'next/image';
-import type { Product } from '@/lib/type/Product';
+import type { Product } from '@/lib/types/Product';
 import PermissionGuard from '@/components/auth/permission-guard';
 
 interface ProductListProps {
@@ -89,6 +89,7 @@ export function ProductList({
                     className="h-10 w-10 rounded-md object-cover bg-gray-100"
                     width={50}
                     height={50}
+                    loading="lazy"
                   />
                   <div className="flex flex-col">
                     <span className="font-medium">{product.name}</span>

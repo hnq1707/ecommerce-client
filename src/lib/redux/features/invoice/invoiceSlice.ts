@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import api from '@/lib/utils/api';
-import { Invoice } from '@/lib/type/Invoice';
+import { Invoice } from '@/lib/types/Invoice';
 
 interface InvoiceState {
   invoices: Invoice[];

@@ -2,7 +2,7 @@
 
 import { UsersIcon, Shield } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import type { User } from '@/lib/type/User';
+import type { User } from '@/lib/types/User';
 
 interface UserStatsProps {
   users: User[];

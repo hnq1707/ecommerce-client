@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { useSession } from 'next-auth/react';
-import type { User, AuthState } from '@/lib/type/auth';
+import type { User, AuthState } from '@/lib/types/auth';
 import useRoles from '../../redux/features/roles/useRole';
 
 interface AuthContextType extends AuthState {

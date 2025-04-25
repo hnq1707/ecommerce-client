@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { Order } from '../type/Order';
+import { Order } from '@/lib/types/Order';
 
 export const exportInvoicePDF = (order: Order) => {
   // Initialize PDF document with A4 size, portrait orientation

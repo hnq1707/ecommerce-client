@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { Separator } from '@/components/ui/separator';
-import { CartItem } from '@/lib/type/CartItem';
+import { CartItem } from '@/lib/types/CartItem';
 
 interface OrderSummaryProps {
   items: CartItem[];

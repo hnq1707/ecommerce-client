@@ -18,7 +18,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { createReview } from '@/lib/utils/review-service';
-import type { ReviewRequest } from '@/lib/type/Review';
+import type { ReviewRequest } from '@/lib/types/Review';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const formSchema = z.object({

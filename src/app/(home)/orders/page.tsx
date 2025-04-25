@@ -13,7 +13,7 @@ import {
 import OrderList from '@/components/orders/order-list';
 import OrderSkeleton from '@/components/orders/order-skeleton';
 import type { AppDispatch } from '@/lib/redux/store';
-import type { Order } from '@/lib/type/Order';
+import type { Order } from '@/lib/types/Order';
 import { Button } from '@/components/ui/button';
 import {
   ChevronLeft,

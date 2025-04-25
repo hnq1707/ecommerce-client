@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import type { Notification } from '@/lib/type/Notification';
+import type { Notification } from '@/lib/types/Notification';
 import { useToast } from '@/components/ui/use-toast';
 import { useSession } from 'next-auth/react';
 

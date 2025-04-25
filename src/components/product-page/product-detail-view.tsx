@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Star } from 'lucide-react';
-import type { Product } from '@/lib/type/Product';
+import type { Product } from '@/lib/types/Product';
 
 interface ProductDetailViewProps {
   product: Product;
@@ -50,6 +50,7 @@ export function ProductDetailView({
                   alt={resource.name}
                   className="object-cover"
                   fill
+                  loading="lazy"
                 />
               </div>
             ))}

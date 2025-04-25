@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import api from '@/lib/utils/api';
-import { Role } from '@/lib/type/Role';
-import { AssignRoleRequest } from '@/lib/type/AssignRoleRequest';
-import { RemoveRoleRequest } from '@/lib/type/RemoveRoleRequest';
+import { Role } from '@/lib/types/Role';
+import { AssignRoleRequest } from '@/lib/types/AssignRoleRequest';
+import { RemoveRoleRequest } from '@/lib/types/RemoveRoleRequest';
 
 // Định nghĩa kiểu dữ liệu cho Permission
 

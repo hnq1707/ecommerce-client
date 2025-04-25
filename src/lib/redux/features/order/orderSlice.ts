@@ -3,7 +3,7 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '@/lib/redux/store';
 import api from '@/lib/utils/api';
-import { Order } from '@/lib/type/Order';
+import { Order } from '@/lib/types/Order';
 
 // Định nghĩa các kiểu dữ liệu
 interface OrderItemRequest {

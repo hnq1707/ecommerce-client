@@ -10,7 +10,7 @@ import {
   
 } from '@/lib/redux/features/category/categorySlice';
 import { RootState, AppDispatch } from '@/lib/redux/store';
-import { Category } from '@/lib/type/Category';
+import { Category } from '@/lib/types/Category';
 
 const useCategories = () => {
   const dispatch = useDispatch<AppDispatch>();

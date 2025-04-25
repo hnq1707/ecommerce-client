@@ -10,7 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { OrderCancelButton } from './order-cancel-button';
 import { motion } from 'framer-motion';
 
-import type { Order, OrderItem } from '@/lib/type/Order';
+import type { Order, OrderItem } from '@/lib/types/Order';
 
 interface OrderListProps {
   orders: Order[] | undefined;

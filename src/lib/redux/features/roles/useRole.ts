@@ -9,9 +9,9 @@ import {
   removeRoleFromUser,
 } from '@/lib/redux/features/roles/roleSlice';
 import { useCallback } from 'react';
-import { Role } from '@/lib/type/Role';
-import { AssignRoleRequest } from '@/lib/type/AssignRoleRequest';
-import { RemoveRoleRequest } from '@/lib/type/RemoveRoleRequest';
+import { Role } from '@/lib/types/Role';
+import { AssignRoleRequest } from '@/lib/types/AssignRoleRequest';
+import { RemoveRoleRequest } from '@/lib/types/RemoveRoleRequest';
 
 export const useRoles = () => {
   const dispatch = useDispatch<AppDispatch>();

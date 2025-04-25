@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 import api from './api';
-import type { ReviewRequest, ReviewResponse, ReviewStats } from '../type/Review';
+import type { ReviewRequest, ReviewResponse, ReviewStats } from '@/lib/types/Review';
 
 // Interface cho response của API phân trang
 interface PaginatedResponse<T> {

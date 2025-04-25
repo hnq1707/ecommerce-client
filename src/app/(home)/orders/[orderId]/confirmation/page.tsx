@@ -22,7 +22,7 @@ import {
 } from '@/lib/redux/features/order/orderSlice';
 import { AppDispatch } from '@/lib/redux/store';
 import Image from 'next/image';
-import { OrderItem } from '@/lib/type/Order';
+import { OrderItem } from '@/lib/types/Order';
 import { useCartStore } from '@/lib/redux/features/cart/useCartStore';
 
 export default function OrderConfirmationPage() {

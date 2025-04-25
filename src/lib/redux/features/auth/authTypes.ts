@@ -1,4 +1,4 @@
-import { User } from '@/lib/type/User';
+import { User } from '@/lib/types/User';
 
 export interface RegisterRequest {
   email: string;

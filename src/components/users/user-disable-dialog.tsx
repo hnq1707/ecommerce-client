@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import type { User } from '@/lib/type/User';
+import type { User } from '@/lib/types/User';
 import { AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
 
 interface UserDisableDialogProps {

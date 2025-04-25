@@ -11,7 +11,7 @@ import {
   toggleStatus,
   
 } from '@/lib/redux/features/user/userSlice';
-import { User } from '@/lib/type/User';
+import { User } from '@/lib/types/User';
 
 export const useUsers = () => {
   const dispatch = useDispatch<AppDispatch>();

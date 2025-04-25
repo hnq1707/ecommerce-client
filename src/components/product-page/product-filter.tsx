@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { CategoryType } from '@/lib/type/Category';
+import { CategoryType } from '@/lib/types/Category';
 
 interface Category {
   id: string;

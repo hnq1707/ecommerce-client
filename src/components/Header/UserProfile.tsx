@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import type { User } from '@/lib/type/User';
+import type { User } from '@/lib/types/User';
 
 interface UserProfileMenuProps {
   user?: User | null;

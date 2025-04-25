@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { useNotifications } from '@/hooks/use-notification'; // Giả sử hook này trả về notifications từ backend
-import type { Notification as AppNotification } from '@/lib/type/Notification';
+import type { Notification as AppNotification } from '@/lib/types/Notification';
 
 interface ToastNotificationProps {
   autoClose?: boolean;

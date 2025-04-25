@@ -32,9 +32,9 @@ import {
 import type { AppDispatch } from '@/lib/redux/store';
 import { useUsers } from '@/lib/redux/features/user/useUser';
 import { useSession } from 'next-auth/react';
-import type { Address } from '@/lib/type/Address';
+import type { Address } from '@/lib/types/Address';
 import { useCartStore } from '@/lib/redux/features/cart/useCartStore';
-import type { CartItem } from '@/lib/type/CartItem';
+import type { CartItem } from '@/lib/types/CartItem';
 import type { Coupon } from '@/lib/utils/coupon-service';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 

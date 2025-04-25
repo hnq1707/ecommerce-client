@@ -1,6 +1,6 @@
 'use client';
 
-import { Resource } from '@/lib/type/Resource';
+import { Resource } from '@/lib/types/Resource';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, ZoomIn, X } from 'lucide-react';

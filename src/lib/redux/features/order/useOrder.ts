@@ -14,7 +14,7 @@ import {
   resetPaymentStatus,
 } from '@/lib/redux/features/order/orderSlice';
 import { OrderRequest } from '@/lib/redux/features/order/orderSlice';
-import { Order } from '@/lib/type/Order';
+import { Order } from '@/lib/types/Order';
 
 export const useOrder = () => {
   const dispatch = useDispatch<AppDispatch>();

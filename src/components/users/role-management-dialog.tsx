@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import type { User } from '@/lib/type/User';
+import type { User } from '@/lib/types/User';
 import { Badge } from '@/components/ui/badge';
 import { X, Plus, RefreshCw } from 'lucide-react';
 import {

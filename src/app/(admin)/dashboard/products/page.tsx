@@ -42,7 +42,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/components/ui/use-toast';
 import useProducts from '@/lib/redux/features/product/useProductStore';
 import { useRouter } from 'next/navigation';
-import type { Product } from '@/lib/type/Product';
+import type { Product } from '@/lib/types/Product';
 import ProtectedRoute from '@/components/auth/protected-route';
 import PermissionGuard from '@/components/auth/permission-guard';
 

@@ -11,7 +11,7 @@ import {
   
 } from '@/lib/redux/features/product/productSlice';
 import { RootState, AppDispatch } from '@/lib/redux/store';
-import { Product, ProductRequest } from '@/lib/type/Product';
+import { Product, ProductRequest } from '@/lib/types/Product';
 
 const useProducts = () => {
   const dispatch = useDispatch<AppDispatch>();

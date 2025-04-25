@@ -35,7 +35,7 @@ import { useToast } from '@/components/ui/use-toast';
 
 import { useNotifications } from '@/hooks/use-notification';
 import NotificationItem from '@/components/notification/notification-item';
-import type { Notification, NotificationType } from '@/lib/type/Notification';
+import type { Notification, NotificationType } from '@/lib/types/Notification';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 

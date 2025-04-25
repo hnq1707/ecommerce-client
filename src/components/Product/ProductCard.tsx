@@ -8,9 +8,9 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Heart, Check, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import type { Product } from '@/lib/type/Product';
+import type { Product } from '@/lib/types/Product';
 import { useCartStore } from '@/lib/redux/features/cart/useCartStore';
-import type { CartItem } from '@/lib/type/CartItem';
+import type { CartItem } from '@/lib/types/CartItem';
 import { cn } from '@/lib/utils/utils';
 import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -23,7 +23,7 @@ interface ProductCardProps {
   onBuyNow?: () => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, onBuyNow }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
@@ -215,6 +215,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onBuyNow }) => {
             alt={product.name}
             fill
             priority
+            loading="lazy"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
             className="object-cover"
           />

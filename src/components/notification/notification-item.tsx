@@ -13,7 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import type { Notification, NotificationType } from '@/lib/type/Notification';
+import type { Notification, NotificationType } from '@/lib/types/Notification';
 import { Avatar } from '@/components/ui/avatar';
 
 // Icons for different notification types

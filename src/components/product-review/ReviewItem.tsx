@@ -3,7 +3,7 @@
 
 import { memo } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import type { Review } from '@/lib/type/Review';
+import type { Review } from '@/lib/types/Review';
 import { Star, ThumbsUp, Flag } from 'lucide-react';
 import { vi } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';

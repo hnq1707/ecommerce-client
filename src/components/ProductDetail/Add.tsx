@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { CartItem } from '@/lib/type/CartItem';
-import { ProductVariant } from '@/lib/type/ProductVariant';
+import { CartItem } from '@/lib/types/CartItem';
+import { ProductVariant } from '@/lib/types/ProductVariant';
 import { useCartStore } from '@/lib/redux/features/cart/useCartStore';
 import { Button } from '../ui/button';
-import { Product } from '@/lib/type/Product';
+import { Product } from '@/lib/types/Product';
 import { Minus, Plus, ShoppingCart, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';

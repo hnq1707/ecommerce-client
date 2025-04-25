@@ -5,13 +5,14 @@ import { useEffect, useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { useUsers } from '@/lib/redux/features/user/useUser';
 import { useRoles } from '@/lib/redux/features/roles/useRole';
-import type { User } from '@/lib/type/User';
+import type { User } from '@/lib/types/User';
 import { UserTable } from '@/components/users/user-table';
 import { UserFilters } from '@/components/users/user-filters';
 import { UserStats } from '@/components/users/user-stats';
 import { UserEditDialog } from '@/components/users/user-edit-dialog';
 import { UserDisableDialog } from '@/components/users/user-disable-dialog';
 import { RoleManagementDialog } from '@/components/users/role-management-dialog';
+import { UpdateUserRequest } from '@/lib/redux/features/user/userSlice';
 
 const roleOptions = [
   { value: 'ADMIN', label: 'Quản trị viên' },
@@ -52,29 +53,31 @@ export default function UsersPage() {
   console.log('users', users);
   // Lọc người dùng theo từ khóa tìm kiếm và bộ lọc vai trò
   const filteredUsers = users.filter((user: User) => {
-    const matchesSearch =
-      user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = (
+      (user.firstName?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+      (user.lastName?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+      (user.email?.toLowerCase() || '').includes(searchTerm.toLowerCase())
+    );
     const matchesRole = roleFilter ? user.roles.some((r) => r.name === roleFilter) : true;
     return matchesSearch && matchesRole;
   });
 
   // Xử lý cập nhật người dùng
-  const handleUpdateUser = async (updatedUser: User) => {
-    try {
-      await updateUserData(updatedUser.id, {
-        firstName: updatedUser.firstName,
-        lastName: updatedUser.lastName,
-        phoneNumber: updatedUser.phoneNumber,
-        imageUrl: currentUser?.imageUrl ?? '',
-      });
+  const handleUpdateUser = async (user: UpdateUserRequest) => {
+      try {
+        if (!currentUser) return;
+        updateUserData(currentUser.id, {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          phoneNumber: user.phoneNumber,
+          imageUrl: currentUser.imageUrl ?? '',
+        });
 
       toast({
         title: 'Cập nhật thành công',
         description: 'Thông tin người dùng đã được cập nhật',
       });
-
+      fetchAllUsers();
       setIsEditDialogOpen(false);
     } catch (error) {
       toast({
@@ -98,7 +101,7 @@ export default function UsersPage() {
       setCurrentUser({ ...currentUser, roles: updatedRoles });
 
       // Fetch lại danh sách users để cập nhật UI
-      await fetchAllUsers();
+       fetchAllUsers();
 
       toast({
         title: 'Thêm vai trò thành công',
@@ -125,7 +128,7 @@ export default function UsersPage() {
       setCurrentUser({ ...currentUser, roles: updatedRoles });
 
       // Fetch lại danh sách users để cập nhật UI
-      await fetchAllUsers();
+      fetchAllUsers();
 
       toast({
         title: 'Xóa vai trò thành công',
@@ -145,13 +148,13 @@ export default function UsersPage() {
     if (!currentUser) return;
 
     try {
-      await toggleUserStatus(currentUser.id);
+      toggleUserStatus(currentUser.id);
 
       // Cập nhật currentUser trực tiếp
       setCurrentUser({ ...currentUser, enabled: !currentUser.enabled });
 
       // Fetch lại danh sách users để cập nhật UI
-      await fetchAllUsers();
+      fetchAllUsers();
 
       toast({
         title: !currentUser.enabled ? 'Kích hoạt thành công' : 'Vô hiệu hóa thành công',

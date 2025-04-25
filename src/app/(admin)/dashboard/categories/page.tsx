@@ -46,11 +46,11 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/components/ui/use-toast';
 import useCategories from '@/lib/redux/features/category/useCategoryStore';
-import type { Category } from '@/lib/type/Category';
+import type { Category } from '@/lib/types/Category';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import type { CategoryType } from '@/lib/type/Category';
+import type { CategoryType } from '@/lib/types/Category';
 import ProtectedRoute from '@/components/auth/protected-route';
 import PermissionGuard from '@/components/auth/permission-guard';
 
@@ -378,7 +378,7 @@ function CategoriesContent() {
                               variant="outline"
                               size="sm"
                               onClick={() => {
-                                // Add a new empty category type
+                                // Add a new empty category types
                                 const newType: CategoryType = {
                                   id: `temp-${Date.now()}`, // Temporary ID until saved
                                   name: '',
@@ -414,7 +414,7 @@ function CategoriesContent() {
                                           size="icon"
                                           className="h-6 w-6"
                                           onClick={() => {
-                                            // Remove this category type
+                                            // Remove this category types
                                             const updatedTypes = [
                                               ...(newCategory.categoryTypes || []),
                                             ];
@@ -504,7 +504,7 @@ function CategoriesContent() {
                                   size="sm"
                                   className="mt-1"
                                   onClick={() => {
-                                    // Add a new empty category type
+                                    // Add a new empty category types
                                     const newType: CategoryType = {
                                       id: `temp-${Date.now()}`, // Temporary ID until saved
                                       name: '',
@@ -841,7 +841,7 @@ function CategoriesContent() {
                       variant="outline"
                       size="sm"
                       onClick={() => {
-                        // Add a new empty category type
+                        // Add a new empty category types
                         const newType: CategoryType = {
                           id: `temp-${Date.now()}`, // Temporary ID until saved
                           name: '',
@@ -871,7 +871,7 @@ function CategoriesContent() {
                                 size="icon"
                                 className="h-6 w-6"
                                 onClick={() => {
-                                  // Remove this category type
+                                  // Remove this category types
                                   const updatedTypes = [...(currentCategory.categoryTypes || [])];
                                   updatedTypes.splice(index, 1);
                                   setCurrentCategory({
@@ -950,7 +950,7 @@ function CategoriesContent() {
                           size="sm"
                           className="mt-1"
                           onClick={() => {
-                            // Add a new empty category type
+                            // Add a new empty category types
                             const newType: CategoryType = {
                               id: `temp-${Date.now()}`, // Temporary ID until saved
                               name: '',

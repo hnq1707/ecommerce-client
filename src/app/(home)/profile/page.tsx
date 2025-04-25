@@ -45,7 +45,7 @@ import {
   selectOrderError,
 } from '@/lib/redux/features/order/orderSlice';
 import type { AppDispatch } from '@/lib/redux/store';
-import type { Order } from '@/lib/type/Order';
+import type { Order } from '@/lib/types/Order';
 import { AddAddressDialog } from '@/components/address/AddAddressDialog';
 import api from '@/lib/utils/api';
 

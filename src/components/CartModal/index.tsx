@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import { Trash2, X } from 'lucide-react';
 import { useCartStore } from '@/lib/redux/features/cart/useCartStore';
 import { Button } from '@/components/ui/button';
-import type { CartItem } from '@/lib/type/CartItem';
+import type { CartItem } from '@/lib/types/CartItem';
 
 interface CartModalProps {
   onClose?: () => void;

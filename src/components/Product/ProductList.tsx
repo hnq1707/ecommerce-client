@@ -12,7 +12,7 @@ import { useCartStore } from '@/lib/redux/features/cart/useCartStore';
 import Pagination from './Pagination';
 import ProductCard from './ProductCard';
 import ProductCardSkeleton from './ProductCardSkeleton';
-import type { Product } from '@/lib/type/Product';
+import type { Product } from '@/lib/types/Product';
 
 interface ProductListProps {
   categoryId?: string;

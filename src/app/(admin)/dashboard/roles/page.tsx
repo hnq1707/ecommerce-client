@@ -33,8 +33,8 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useRoles } from '@/lib/redux/features/roles/useRole'; // Đảm bảo đường dẫn import chính xác
 import { Textarea } from '@/components/ui/textarea';
-import { Permission } from '@/lib/type/Permission';
-import { Role } from '@/lib/type/Role';
+import { Permission } from '@/lib/types/Permission';
+import { Role } from '@/lib/types/Role';
 
 // Dữ liệu mẫu của tất cả các quyền (sử dụng name thay vì id)
 const allPermissions = [
