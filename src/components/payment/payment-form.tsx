@@ -10,7 +10,6 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useDispatch, useSelector } from "react-redux"
 import {
   getOrderDetails,
-  selectOrderDetails,
   selectOrderLoading,
 } from "@/lib/redux/features/order/orderSlice"
 import { AppDispatch } from "@/lib/redux/store"

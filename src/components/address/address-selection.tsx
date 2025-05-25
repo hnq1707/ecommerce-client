@@ -12,7 +12,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
 
 interface AddressSelectionProps {
   addresses: Address[];
@@ -90,14 +89,6 @@ export function AddressSelection({
                   <div>
                     <div className="flex items-center gap-2">
                       <p className="font-medium">{address.name}</p>
-                      {address.isDefault && (
-                        <Badge
-                          variant="outline"
-                          className="text-xs bg-primary/10 text-primary border-primary/30"
-                        >
-                          Mặc định
-                        </Badge>
-                      )}
                     </div>
                     <p className="text-sm text-gray-700">{address.phoneNumber}</p>
                     <p className="text-sm text-muted-foreground mt-1">

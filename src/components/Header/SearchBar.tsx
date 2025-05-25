@@ -104,6 +104,13 @@ const SearchBar = ({ compact = false }: SearchBarProps) => {
       }
     }
   };
+  const formatCurrency = (amount: number) => {
+    amount = amount * 23000;
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(amount);
+  };
 
   return (
     <div className="relative" ref={searchResultsRef}>
@@ -258,7 +265,7 @@ const SearchBar = ({ compact = false }: SearchBarProps) => {
                       <p className="text-sm font-medium text-gray-900 truncate">{product.name}</p>
                       <div className="flex items-center mt-1">
                         <p className="text-sm font-medium text-blue-600">
-                          {product.price.toLocaleString('vi-VN')}₫
+                          {formatCurrency(product.price)}
                         </p>
                         <span className="mx-2 text-gray-300">|</span>
                         <p className="text-xs text-gray-500 truncate">{product.categoryName}</p>

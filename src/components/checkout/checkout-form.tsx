@@ -1,19 +1,11 @@
 'use client';
 
 import type React from 'react';
-
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { CreditCard, Truck, ShieldCheck, Clock } from 'lucide-react';
+import { Clock, CreditCard, ShieldCheck, Truck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
@@ -24,10 +16,10 @@ import { CouponSelector } from '../coupon/coupon-selector';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   createOrder,
+  type OrderRequest,
   selectCurrentOrder,
   selectOrderError,
   selectOrderLoading,
-  type OrderRequest,
 } from '@/lib/redux/features/order/orderSlice';
 import type { AppDispatch } from '@/lib/redux/store';
 import { useUsers } from '@/lib/redux/features/user/useUser';
@@ -71,12 +63,8 @@ export default function CheckoutForm() {
       // Chỉ tự động chọn địa chỉ đầu tiên nếu không có địa chỉ nào được chọn
       if (user.addressList.length > 0 && !selectedAddressId) {
         // Ưu tiên chọn địa chỉ mặc định nếu có
-        const defaultAddress = user.addressList.find((addr) => addr.isDefault);
-        if (defaultAddress) {
-          setSelectedAddressId(defaultAddress.id);
-        } else {
-          setSelectedAddressId(user.addressList[0].id);
-        }
+        setSelectedAddressId(user.addressList[0].id);
+
       }
     }
   }, [user?.addressList, selectedAddressId]);
@@ -190,6 +178,15 @@ export default function CheckoutForm() {
     dispatch(createOrder(orderRequest));
   };
 
+  const formatCurrency = (amount: number) => {
+    amount = amount * 23000;
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(amount);
+  };
+
+
   return (
     <form onSubmit={handleSubmit} className="pb-12">
       <div className="grid gap-8 md:grid-cols-2">
@@ -236,7 +233,8 @@ export default function CheckoutForm() {
                 onValueChange={setPaymentMethod}
                 className="space-y-4"
               >
-                <div className="flex items-center space-x-2 border rounded-md p-4 hover:border-primary transition-colors">
+                <div
+                  className="flex items-center space-x-2 border rounded-md p-4 hover:border-primary transition-colors">
                   <RadioGroupItem value="CARD" id="card" />
                   <Label htmlFor="card" className="flex items-center gap-2 cursor-pointer w-full">
                     <div className="flex items-center justify-between w-full">
@@ -248,7 +246,8 @@ export default function CheckoutForm() {
                     </div>
                   </Label>
                 </div>
-                <div className="flex items-center space-x-2 border rounded-md p-4 hover:border-primary transition-colors">
+                <div
+                  className="flex items-center space-x-2 border rounded-md p-4 hover:border-primary transition-colors">
                   <RadioGroupItem value="COD" id="cod" />
                   <Label htmlFor="cod" className="flex items-center gap-2 cursor-pointer w-full">
                     <div className="flex items-center justify-between w-full">
@@ -334,7 +333,7 @@ export default function CheckoutForm() {
               >
                 {isLoading
                   ? 'Đang xử lý...'
-                  : `Đặt Hàng • ${(totalPrice - discountAmount).toLocaleString('vi-VN')}đ`}
+                  : `Đặt Hàng • ${formatCurrency(totalPrice - discountAmount)}`}
               </Button>
             </CardFooter>
             {(isAddingAddress || !selectedAddressId || !paymentMethod) && (

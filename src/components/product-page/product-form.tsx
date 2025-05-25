@@ -192,17 +192,7 @@ export function ProductFormBasic({
           </SelectContent>
         </Select>
       </div>
-
-      {/* Category Type Name */}
-      <div className="grid gap-2">
-        <Label htmlFor="categoryTypeName">Category Type Name</Label>
-        <Input
-          id="categoryTypeName"
-          value={product.categoryTypeName ?? ''}
-          onChange={(e) => onProductChange({ categoryTypeName: e.target.value })}
-          placeholder="Nhập Category Type Name"
-        />
-      </div>
+      
 
       {/* Thumbnail */}
       <div className="grid gap-2">

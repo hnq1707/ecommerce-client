@@ -66,7 +66,7 @@ export function OrderSummary({ items, subtotal, discount, total }: OrderSummaryP
         <Separator />
         <div className="flex justify-between font-medium">
           <p>Tổng cộng</p>
-          <p>${formatCurrency(total)}</p>
+          <p>{formatCurrency(total)}</p>
         </div>
       </div>
     </div>

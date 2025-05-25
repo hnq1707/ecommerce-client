@@ -147,6 +147,7 @@ const authSlice = createSlice({
           email: action.payload.result.email,
           roles: [],
           addressList: [],
+          enabled: true
         };
       })
       .addCase(authenticateUser.rejected, (state, action) => {

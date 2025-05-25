@@ -1,22 +1,26 @@
+// app/api/products/search/suggest/brand/[brand]/route.ts
 import { type NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest, { params }: { params: { brand: string } }) {
-  const brand = params.brand;
+export async function GET(
+  request: NextRequest,
+  // bọc params vào Promise<{ brand: string }>
+  { params }: { params: Promise<{ brand: string }> },
+) {
+  // vì params là Promise, phải await nó mới lấy được object
+  const { brand } = await params;
 
   if (!brand) {
     return NextResponse.json({ error: 'Brand is required' }, { status: 400 });
   }
 
   try {
-    // Replace with your actual backend URL
-    const backendUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
+    const backendUrl =
+      process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
     const response = await fetch(
-      `${backendUrl}/api/products/search/suggest/brand/${encodeURIComponent(brand)}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
+      `${backendUrl}/api/products/search/suggest/brand/${encodeURIComponent(
+        brand,
+      )}`,
+      { headers: { 'Content-Type': 'application/json' } },
     );
 
     if (!response.ok) {
@@ -27,6 +31,9 @@ export async function GET(request: NextRequest, { params }: { params: { brand: s
     return NextResponse.json(data);
   } catch (error) {
     console.error('Brand suggestion error:', error);
-    return NextResponse.json({ error: 'Failed to get brand suggestions' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to get brand suggestions' },
+      { status: 500 },
+    );
   }
 }

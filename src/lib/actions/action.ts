@@ -12,7 +12,7 @@ export const login2 = async (
       ...credentials,
     });
 
-    return result || { error: 'Login failed' }; // Tránh undefined
+    return result || { error: 'Login failed' };
   } catch (error : any) {
     return { error: error.message || 'An error occurred' };
   }

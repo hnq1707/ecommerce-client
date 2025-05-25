@@ -18,7 +18,6 @@ import { StatsCards } from '@/components/dashboard/starts-card';
 import { RevenueChart } from '@/components/dashboard/revenue-chart';
 import { OrdersChart } from '@/components/dashboard/order-chart';
 import { CategoriesChart } from '@/components/dashboard/category-chart';
-import { useSession } from 'next-auth/react';
 
 // Component chính
 export default function DashboardPage() {

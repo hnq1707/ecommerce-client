@@ -89,7 +89,6 @@ const StoreLocator = () => {
   const [selectedDistrict, setSelectedDistrict] = useState<string>('');
   const [selectedStore, setSelectedStore] = useState<Store | null>(null);
   const [filteredStores, setFilteredStores] = useState<Store[]>(stores);
-  const [mapUrl, setMapUrl] = useState<string>('');
 
   // Lấy danh sách tỉnh thành (city)
   const cities = Array.from(new Set(stores.map((store) => store.city)));
@@ -116,10 +115,10 @@ const StoreLocator = () => {
   // Cập nhật URL bản đồ khi cửa hàng được chọn thay đổi
   useEffect(() => {
     if (selectedStore) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const embedUrl = `https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=${encodeURIComponent(
         selectedStore.address,
       )}&center=${selectedStore.coordinates.lat},${selectedStore.coordinates.lng}&zoom=16`;
-      setMapUrl(embedUrl);
     }
   }, [selectedStore]);
 
