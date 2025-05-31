@@ -19,7 +19,7 @@ interface AddProps {
 const Add = ({ product, variant, stockQuantity }: AddProps) => {
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
-  const { addItem } = useCartStore();
+  const { addItem, clear } = useCartStore();
   const { toast } = useToast();
   const router = useRouter();
   const handleQuantity = (type: 'i' | 'd') => {
@@ -34,7 +34,7 @@ const Add = ({ product, variant, stockQuantity }: AddProps) => {
     if ((stockQuantity ?? 0) < 1 || !variant) return;
 
     setIsAdding(true);
-
+    clear();
     // Create cart item
     const cartItem: CartItem = {
       id: product.id,
@@ -61,7 +61,7 @@ const Add = ({ product, variant, stockQuantity }: AddProps) => {
 
       // Show success toast
       toast({
-        title: 'Added to cart',
+        title: 'Thêm thành công',
         description: `${quantity} × ${product.name} (${variant.color}, ${variant.size})`,
         duration: 3000,
       });
